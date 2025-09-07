@@ -1,0 +1,72 @@
+<!-- product-list.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách sản phẩm - Nhà thuốc ABC</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../product-list/product-list.css">
+</head>
+<body>
+  <!-- Header sẽ được render bằng JS -->
+  <header id="header"></header>
+
+  <main>
+    <div class="container">
+      <h1>Danh sách sản phẩm</h1>
+      
+      <div class="content-wrapper">
+        <!-- Sidebar lọc -->
+        <aside class="filter-sidebar">
+          <h3>Bộ lọc</h3>
+          <div id="filter-section">
+            <!-- Các bộ lọc sẽ được render ở đây -->
+          </div>
+          <button id="apply-filters" class="btn btn-primary">Áp dụng bộ lọc</button>
+          <button id="clear-filters" class="btn btn-secondary">Xóa bộ lọc</button>
+        </aside>
+
+        <!-- Nội dung chính -->
+        <div class="main-content">
+          <!-- Thanh công cụ (sắp xếp) -->
+          <div class="toolbar">
+            <div class="sort-section">
+              <label for="sort-select">Sắp xếp theo:</label>
+              <select id="sort-select">
+                <option value="default">Mặc định</option>
+                <option value="name-asc">Tên A-Z</option>
+                <option value="name-desc">Tên Z-A</option>
+                <option value="price-asc">Giá thấp đến cao</option>
+                <option value="price-desc">Giá cao đến thấp</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Danh sách sản phẩm -->
+          <div id="product-list-container">
+            <div id="product-grid" class="product-grid">
+              <!-- Sản phẩm sẽ được render ở đây -->
+            </div>
+            
+            <!-- Phân trang -->
+            <div id="pagination" class="pagination">
+              <!-- Phân trang sẽ được render ở đây -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer sẽ được render bằng JS -->
+  <footer id="footer"></footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang product-list -->
+  <script src="../js/product-list.js"></script>
+</body>
+</html>
