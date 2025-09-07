@@ -15,9 +15,9 @@ const mockProducts = [
     price: 50000,
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
-    image: "images/products/paracetamol.jpg",
+    image: "statics/images/MED001.jpg",
     description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
-    type: "khongkedon", // hoặc "kedon"
+    type: "khongkedon", 
     units: [
       { name: "Vỉ 10 viên", price: 50000 },
       { name: "Hộp 10 vỉ", price: 480000 }
@@ -29,7 +29,7 @@ const mockProducts = [
     price: 120000,
     category: "Vitamin & Khoáng chất",
     categoryId: 2,
-    image: "images/products/vitamin-c.jpg",
+    image: "statics/images/MED002.jpg",
     description: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     type: "khongkedon",
     units: [
@@ -43,7 +43,7 @@ const mockProducts = [
     price: 85000,
     category: "Hỗ trợ tiêu hóa",
     categoryId: 3,
-    image: "images/products/men-vi-sinh.jpg",
+    image: "statics/images/MED003.jpg",
     description: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     type: "khongkedon",
     units: [
@@ -57,7 +57,7 @@ const mockProducts = [
     price: 65000,
     category: "Chăm sóc cá nhân",
     categoryId: 4,
-    image: "images/products/tobrex.jpg",
+    image: "statics/images/MED004.jpg",
     description: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     type: "kedon",
     units: [
@@ -70,7 +70,7 @@ const mockProducts = [
     price: 350000,
     category: "Thực phẩm chức năng",
     categoryId: 5,
-    image: "images/products/omega3.jpg",
+    image: "statics/images/MED005.jpg",
     description: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     type: "khongkedon",
     units: [
@@ -84,7 +84,7 @@ const mockProducts = [
     price: 75000,
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
-    image: "images/products/bao-thanh.jpg",
+    image: "statics/images/MED006.jpg",
     description: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     type: "khongkedon",
     units: [
@@ -143,8 +143,8 @@ const mockOrders = [
     ],
     totalAmount: 220000,
     shippingAddress: "123 Đường ABC, Quận 1, TP. HCM",
-    paymentMethod: "cod", // hoặc "bank_transfer"
-    status: "Đang giao hàng", // "Chờ xác nhận", "Đang giao hàng", "Đã giao", "Đã hủy"
+    paymentMethod: "cod",
+    status: "Đang giao hàng",
     orderDate: "2024-05-20"
   }
 ];
