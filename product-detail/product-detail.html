@@ -1,0 +1,41 @@
+<!-- product-detail.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sản phẩm - Nhà thuốc ABC</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../product-detail/product-detail.css">
+</head>
+<body>
+  <!-- Header sẽ được render bằng JS -->
+  <header id="header"></header>
+
+  <main>
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="../index.html">Trang chủ</a> >
+        <a href="product-list/product-list.html">Sản phẩm</a> >
+        <span id="breadcrumb-product-name">Tên sản phẩm</span>
+      </nav>
+
+      <!-- Nội dung chi tiết sản phẩm -->
+      <div id="product-detail-container">
+        <!-- Nội dung sẽ được render bằng JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer sẽ được render bằng JS -->
+  <footer id="footer"></footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/common.js"></script>
+  <!-- Script cho trang product-detail -->
+  <script src="product-detail.js"></script>
+</body>
+</html>
