@@ -61,12 +61,19 @@ function loadHeader() {
         try {
             const currentUser = JSON.parse(currentUserJson);
             if (currentUser && currentUser.name) { // Kiểm tra thêm currentUser và currentUser.name
+                // --- PHẦN CẬP NHẬT: Tính số lượng sản phẩm trong giỏ hàng ---
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const userCartItems = cart.filter(item => item.userId == currentUser.id);
+                const cartCount = userCartItems.length;
+                const cartText = cartCount > 0 ? `Giỏ hàng (${cartCount})` : 'Giỏ hàng';
+                // --- HẾT PHẦN CẬP NHẬT ---
+                
                 navLinks = `
                     <a href="../index.html">Trang chủ</a>
                     <a href="product-list/product-list.html">Sản phẩm</a>
                     <a href="account.html">Tài khoản của tôi (${currentUser.name})</a>
                     <a href="#" id="logout-link">Đăng xuất</a>
-                    <a href="cart.html">Giỏ hàng</a>
+                    <a href="cart.html">${cartText}</a> <!-- Liên kết giỏ hàng đã cập nhật -->
                 `;
             } else {
                 // Dữ liệu currentUser không hợp lệ
@@ -80,12 +87,12 @@ function loadHeader() {
         }
     } else {
         // Người dùng chưa đăng nhập
-        navLinks = getGuestNavLinks();
+        navLinks = getGuestNavLinks(); // Liên kết cho khách cũng đã bao gồm Giỏ hàng
     }
 
     header.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1><a href="index.html" style="text-decoration: none; color: inherit;">Nhà thuốc ABC</a></h1>
+            <h1><a href="../index.html" style="text-decoration: none; color: inherit;">Nhà thuốc ABC</a></h1>
             <nav>${navLinks}</nav>
         </div>
         <div style="margin-top: 10px;">
@@ -106,6 +113,17 @@ function loadHeader() {
             });
         }
     }
+}
+
+// Hàm tiện ích để lấy liên kết cho khách (đã bao gồm Giỏ hàng)
+function getGuestNavLinks() {
+    return `
+        <a href="../index.html">Trang chủ</a>
+        <a href="product-list/product-list.html">Sản phẩm</a>
+        <a href="login.html">Đăng nhập</a>
+        <a href="register.html">Đăng ký</a>
+        <a href="cart.html">Giỏ hàng</a>
+    `;
 }
 
 // Hàm tiện ích để lấy liên kết cho khách
@@ -152,7 +170,7 @@ function renderFeaturedProducts() {
                 <img src="${product.image}" alt="${product.name}">
                 <h3>${product.name}</h3>
                 <span class="price">${formatCurrency(price)}</span>
-                <a href="product-detail.html?id=${product.id}" class="btn">Xem chi tiết</a>
+                <a href="product-detail/product-detail.html?id=${product.id}" class="btn">Xem chi tiết</a>
             </div>
         `;
     });
