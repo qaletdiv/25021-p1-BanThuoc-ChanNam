@@ -1,4 +1,4 @@
-const basePath = './'; 
+const basePath = '/'; 
 
 /**
  * Khởi tạo ứng dụng khi trang load xong

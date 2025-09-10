@@ -48,7 +48,7 @@ function renderProductDetail() {
     let html = `
         <div class="product-detail-content"> <!-- Wrapper mới cho layout -->
             <div class="product-detail-image">
-                <img src="${currentProduct.image || 'https://placehold.co/600x400?text=No+Image'}" alt="${currentProduct.name}">
+                <img src="../${currentProduct.image || 'https://placehold.co/600x400?text=No+Image'}" alt="${currentProduct.name}">
             </div>
             <div class="product-detail-info">
                 <h1>${currentProduct.name}</h1>
