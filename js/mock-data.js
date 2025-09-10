@@ -109,6 +109,89 @@ const mockProducts = [
       { name: "Chai 100ml", price: 75000 },
       { name: "Hộp 2 chai", price: 140000 }
     ]
+  },
+  {
+    id: 7,
+    name: "Paracetamol 500mg",
+    price: 50000,
+    category: "Thuốc cảm cúm & Sốt",
+    categoryId: 1,
+    image: "images/products/med001.jpg",
+    description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
+    type: "khongkedon", // hoặc "kedon"
+    units: [
+      { name: "Vỉ 10 viên", price: 50000 },
+      { name: "Hộp 10 vỉ", price: 480000 }
+    ]
+  },
+  {
+    id: 8,
+    name: "Vitamin C 1000mg",
+    price: 120000,
+    category: "Vitamin & Khoáng chất",
+    categoryId: 2,
+    image: "images/products/med002.jpg",
+    description: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
+    type: "khongkedon",
+    units: [
+      { name: "Chai 30 viên", price: 120000 },
+      { name: "Hộp 60 viên", price: 230000 }
+    ]
+  },
+  {
+    id: 9,
+    name: "Men vi sinh Đại Bắc (Probiotics)",
+    price: 85000,
+    category: "Hỗ trợ tiêu hóa",
+    categoryId: 3,
+    image: "images/products/med003.jpg",
+    description: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
+    type: "khongkedon",
+    units: [
+      { name: "Hộp 10 gói", price: 85000 },
+      { name: "Hộp 30 gói", price: 240000 }
+    ]
+  },
+  {
+    id: 10,
+    name: "Thuốc nhỏ mắt Tobrex",
+    price: 65000,
+    category: "Chăm sóc cá nhân",
+    categoryId: 4,
+    image: "images/products/med004.jfif",
+    description: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
+    type: "kedon",
+    units: [
+      { name: "Ống 5ml", price: 65000 }
+    ]
+  },
+  {
+    id: 11,
+    name: "Omega 3 Total",
+    price: 350000,
+    category: "Thực phẩm chức năng",
+    categoryId: 5,
+    image: "images/products/med005.jfif",
+    description: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
+    type: "khongkedon",
+    units: [
+      { name: "Chai 30 viên", price: 350000 },
+      { name: "Hộp 90 viên", price: 990000 }
+    ]
+  },
+  {
+    id: 12,
+    name: "Thuốc ho Bảo Thanh",
+    price: 75000,
+    category: "Thuốc cảm cúm & Sốt",
+    categoryId: 1,
+    image: "images/products/med006.jfif",
+    description: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
+    type: "khongkedon",
+    units: [
+      { name: "Chai 100ml", price: 75000 },
+      { name: "Hộp 2 chai", price: 140000 }
+    ]
   }
 ];
 
