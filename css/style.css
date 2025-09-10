@@ -170,6 +170,7 @@ body {
 .btn-primary {
   background: #fff;
   color: #1e40af;
+  width: 100%;
 }
 
 .btn-primary:hover {
@@ -181,6 +182,7 @@ body {
   background: transparent;
   color: white;
   border: 2px solid white;
+  width: 100%;
 }
 
 .btn-secondary:hover {
@@ -272,17 +274,20 @@ body {
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
+  flex: 14;
 }
 
 .product-card h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: #1f2937;
+  flex: 1;
 }
 
 .product-card p {
   color: #6b7280;
   margin-bottom: 1rem;
+  flex: 4;
 }
 
 .price {
@@ -290,6 +295,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex: 1;
 }
 
 .current-price {
