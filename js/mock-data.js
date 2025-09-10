@@ -2,11 +2,27 @@
 
 // Danh mục sản phẩm
 const mockCategories = [
-  { id: 1, name: "Thuốc cảm cúm & Sốt" },
-  { id: 2, name: "Vitamin & Khoáng chất" },
-  { id: 3, name: "Hỗ trợ tiêu hóa" },
-  { id: 4, name: "Chăm sóc cá nhân" },
-  { id: 5, name: "Thực phẩm chức năng" }
+  { 
+    id: 1, 
+    name: "Thuốc cảm cúm & Sốt",
+    description: "Các loại thuốc điều trị cảm cúm, sốt, đau đầu" 
+  },
+  { id: 2, 
+    name: "Vitamin & Khoáng chất",
+    description: "Bổ sung vitamin, khoáng chất thiết yếu"
+  },
+  { id: 3, 
+    name: "Hỗ trợ tiêu hóa",
+    description: "Thuốc hỗ trợ tiêu hóa, đau dạ dày"
+  },
+  { id: 4, 
+    name: "Tim mạch",
+    description: "Thuốc hỗ trợ tim mạch, huyết áp"
+  },
+  { id: 5, 
+    name: "Thực phẩm chức năng",
+    description: "Khám phá các sản phẩm trong danh mục này"
+  }
 ];
 
 // Sản phẩm mẫu
@@ -17,7 +33,7 @@ const mockProducts = [
     price: 50000,
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
-    image: "../images/products/paracetamol.jpg",
+    image: "images/products/med001.jpg",
     description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
     type: "khongkedon", // hoặc "kedon"
     units: [
@@ -31,7 +47,7 @@ const mockProducts = [
     price: 120000,
     category: "Vitamin & Khoáng chất",
     categoryId: 2,
-    image: "../images/products/MED002.jpg",
+    image: "images/products/med002.jpg",
     description: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     type: "khongkedon",
     units: [
@@ -45,7 +61,7 @@ const mockProducts = [
     price: 85000,
     category: "Hỗ trợ tiêu hóa",
     categoryId: 3,
-    image: "../images/products/men-vi-sinh.jpg",
+    image: "images/products/med003.jpg",
     description: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     type: "khongkedon",
     units: [
@@ -59,7 +75,7 @@ const mockProducts = [
     price: 65000,
     category: "Chăm sóc cá nhân",
     categoryId: 4,
-    image: "../images/products/tobrex.jpg",
+    image: "images/products/med004.jfif",
     description: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     type: "kedon",
     units: [
@@ -72,7 +88,7 @@ const mockProducts = [
     price: 350000,
     category: "Thực phẩm chức năng",
     categoryId: 5,
-    image: "../images/products/omega3.jpg",
+    image: "images/products/med005.jfif",
     description: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     type: "khongkedon",
     units: [
@@ -86,7 +102,7 @@ const mockProducts = [
     price: 75000,
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
-    image: "../images/products/bao-thanh.jpg",
+    image: "images/products/med006.jfif",
     description: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     type: "khongkedon",
     units: [
