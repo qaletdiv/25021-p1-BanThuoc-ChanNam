@@ -68,6 +68,7 @@ function loadHeader() {
                 navLinks = `
                     <a href="${basePath}index.html" class="nav-link">Trang chủ</a>
                     <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
+                    <a href="${basePath}contact.html" class="nav-link">Liên hệ</a>
                     <a href="${basePath}account.html" class="nav-link">Tài khoản của tôi (${currentUser.name})</a>
                     <a href="#" id="logout-link" class="nav-link">Đăng xuất</a>
                     <a href="${basePath}cart.html" class="nav-link">${cartText}</a>
@@ -156,6 +157,8 @@ function loadHeader() {
 function getGuestNavLinks() {
     return `
         <a href="${basePath}index.html" class="nav-link">Trang chủ</a>
+        <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
+        <a href="${basePath}contact.html" class="nav-link">Liên hệ</a>
         <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
         <a href="${basePath}login.html" class="nav-link">Đăng nhập</a>
         <a href="${basePath}register.html" class="nav-link register">Đăng ký</a>
@@ -263,9 +266,9 @@ function renderFeaturedProducts() {
         productHTML += `
             <div class="product-card">
                 ${badgeHTML} <!-- Chèn badge nếu có -->
-                <img src="${product.image || 'https://placehold.co/200x200?text=No+Image'}" alt="${product.name}">
+                <img src="${product.image}" alt="${product.name}">
                 <h3>${product.name}</h3>
-                <p>${product.description || 'Không có mô tả'}</p>
+                <p>${product.description}</p>
                 <div class="price">
                     <span class="current-price">${priceDisplay}</span>
                     <!-- Hiển thị giá cũ nếu có -->
