@@ -1,21 +1,26 @@
-<!-- product-list.html -->
+<!-- product-list/product-list.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danh sách sản phẩm - Nhà thuốc ABC</title>
+  <title>Danh sách sản phẩm - PharmaHub</title>
+  <!-- Liên kết tới style.css chính -->
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../product-list/product-list.css">
+  <!-- Liên kết tới CSS riêng của trang product-list -->
+  <link rel="stylesheet" href="product-list.css">
 </head>
 <body>
-  <!-- Header sẽ được render bằng JS -->
-  <header id="header"></header>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Header sẽ được render bằng JS -->
+    </div>
+  </header>
 
   <main>
     <div class="container">
       <h1>Danh sách sản phẩm</h1>
-      
       <div class="content-wrapper">
         <!-- Sidebar lọc -->
         <aside class="filter-sidebar">
@@ -26,7 +31,6 @@
           <button id="apply-filters" class="btn btn-primary">Áp dụng bộ lọc</button>
           <button id="clear-filters" class="btn btn-secondary">Xóa bộ lọc</button>
         </aside>
-
         <!-- Nội dung chính -->
         <div class="main-content">
           <!-- Thanh công cụ (sắp xếp) -->
@@ -42,13 +46,11 @@
               </select>
             </div>
           </div>
-
           <!-- Danh sách sản phẩm -->
           <div id="product-list-container">
             <div id="product-grid" class="product-grid">
               <!-- Sản phẩm sẽ được render ở đây -->
             </div>
-            
             <!-- Phân trang -->
             <div id="pagination" class="pagination">
               <!-- Phân trang sẽ được render ở đây -->
@@ -59,13 +61,18 @@
     </div>
   </main>
 
-  <!-- Footer sẽ được render bằng JS -->
-  <footer id="footer"></footer>
+  <!-- Footer -->
+  <footer class="footer" id="main-footer"> 
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
 
   <!-- Load dữ liệu mẫu trước -->
   <script src="../js/mock-data.js"></script>
-  <!-- Script chính -->
-  <script src="../js/common.js"></script>
+  <!-- Script chính chứa loadHeader, loadFooter -->
+  <!-- Đảm bảo main.js được load sau mock-data.js -->
+  <script src="../js/main.js"></script>
   <!-- Script cho trang product-list -->
   <script src="product-list.js"></script>
 </body>

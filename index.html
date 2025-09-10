@@ -3,38 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nhà thuốc NC</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>PharmaHub - Nhà thuốc trực tuyến uy tín</title>
+  <link rel="stylesheet" href="css/style.css"> 
 </head>
 <body>
-  <!-- Header sẽ được render bằng JS -->
-  <header id="header"></header>
-
-  <main>
-    <!-- Sản phẩm nổi bật -->
-    <section class="featured-section">
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Header sẽ được render bằng JS -->
+    </div>
+  </header>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Nhà thuốc trực tuyến uy tín</h1>
+          <p>Cung cấp thuốc chất lượng cao, giao hàng nhanh chóng, tư vấn chuyên nghiệp 24/7</p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary">Khám phá ngay</button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="https://dummyimage.com/600x400/1e40af/ffffff?text=Pharmacy+Interior" alt="Nhà thuốc" referrerpolicy="no-referrer">
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Featured Products -->
+  <section class="featured-products">
+    <div class="container">
       <h2>Sản phẩm nổi bật</h2>
-      <div id="featured-products" class="product-grid">
-        <!-- Sản phẩm sẽ được render ở đây -->
+      <p class="section-subtitle">Những sản phẩm bán chạy và khuyến mãi hấp dẫn</p>
+      <div class="products-grid" id="featured-products">
+         <!-- Nội dung sản phẩm sẽ được render bởi JS -->
       </div>
-    </section>
-
-    <!-- Danh mục sản phẩm -->
-    <section class="category-section">
+    </div>
+  </section>
+  <!-- Categories -->
+  <section class="categories">
+    <div class="container">
       <h2>Danh mục sản phẩm</h2>
-      <div id="categories" class="category-list">
-        <!-- Danh mục sẽ được render ở đây -->
+      <p class="section-subtitle">Khám phá các danh mục thuốc đa dạng</p>
+      <div class="categories-grid" id="categories">
+        <!-- Nội dung danh mục sẽ được render bởi JS -->
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+  <!-- Footer -->
+  <footer class="footer" id="main-footer"> 
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
 
-  <!-- Footer sẽ được render bằng JS -->
-  <footer id="footer"></footer>
-
-  <!-- Load dữ liệu mẫu trước -->
+  <!-- Scripts -->
   <script src="js/mock-data.js"></script>
-  <!-- Script chính -->
-  <script src="js/main.js"></script>
-  <script src="js/common.js"></script>
+  <script src="js/main.js"></script> 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        initApp(); // Gọi hàm khởi tạo từ main.js
+    });
+  </script>
 </body>
 </html>
