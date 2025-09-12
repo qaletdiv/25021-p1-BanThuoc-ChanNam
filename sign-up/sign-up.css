@@ -48,6 +48,7 @@
 }
 .promo-image {
   margin-top: 1rem;
+  width: 100%; height: auto; border-radius: 8px;
 }
 
 /* Login Form */
@@ -188,6 +189,31 @@
   font-size: 0.875rem;
   display: none; /* Ẩn mặc định */
 }
+
+#error-fullname {
+  display:none;
+}
+
+#error-email {
+  display:none;
+}
+
+#error-phone {
+  display:none;
+}
+
+#error-confirm-password {
+  display:none;
+}
+
+#error-password {
+  display:none;
+}
+
+#error-terms {
+  display:none;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
