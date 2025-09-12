@@ -1,0 +1,263 @@
+/* Container chính cho form 2 cột */
+.login-container {
+  display: flex;
+  gap: 30px; /* Khoảng cách giữa 2 cột */
+  margin: 5rem auto; /* Canh giữa và margin trên/dưới */
+  max-width: 1200px; /* Chiều rộng tối đa */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border: 1px solid #e5e7eb;
+}
+
+/* Cột trong form (trái và phải) */
+.login-column {
+  flex: 1; /* Hai cột chia đều không gian */
+  min-width: 0; /* Cho phép cột co lại trên màn hình nhỏ */
+}
+
+/* Info Box - phần thông tin lợi ích */
+.info-box {
+  background-color: #f9fafb;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+}
+.info-box h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+.info-box ul {
+  list-style: none;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.info-box ul li {
+  margin-bottom: 0.75rem;
+  color: #6b7280;
+  position: relative;
+  padding-left: 0.75rem;
+}
+.info-box ul li::before {
+  content: "•";
+  color: #1e40af;
+  position: absolute;
+  left: 0;
+}
+.promo-image {
+  margin-top: 1rem;
+}
+
+/* Login Form */
+.login-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* Form Header */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.form-header .icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #1e40af;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1rem;
+}
+.form-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+.form-header p {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+/* Input Wrapper */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.input-wrapper input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+.input-wrapper input:focus {
+  border: 1px solid #1e40af;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+.input-wrapper .icon-input {
+  padding: 0.75rem 1rem;
+  color: #6b7280;
+  font-size: 1.1rem;
+  background-color: #f3f4f6;
+}
+.toggle-password {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  color: #6b7280;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Checkbox Wrapper */
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+.checkbox-wrapper input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1e40af;
+}
+.policy-link {
+  color: #1e40af;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.policy-link:hover {
+  color: #1d4ed8;
+}
+
+/* Button */
+.btn-block {
+  width: 100%;
+}
+
+/* Form Footer */
+.form-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+.login-link {
+  color: #1e40af;
+  text-decoration: underline;
+  font-weight: 500;
+}
+.login-link:hover {
+  color: #1d4ed8;
+}
+
+/* Error Message */
+.error-message {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  color: #dc2626;
+  background-color: #fee2e2;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: none; /* Ẩn mặc định */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Trên thiết bị di động, gom cả 2 cột thành 1 cột */
+  .login-container {
+    flex-direction: column;
+    gap: 20px; /* Khoảng cách giữa các phần trên mobile */
+  }
+
+  .login-column {
+    /* Các item sẽ xếp dọc theo một cột duy nhất */
+    gap: 1.5rem; /* Giữ khoảng cách giữa các item */
+  }
+
+  .login-container {
+    margin: 3rem auto;
+    padding: 1.5rem;
+  }
+
+  .info-box {
+    padding: 1.5rem;
+  }
+  .info-box h3 {
+    font-size: 1.1rem;
+  }
+  .info-box ul li {
+    font-size: 0.8rem;
+  }
+  .promo-image img {
+    max-height: 150px;
+  }
+  .form-header h2 {
+    font-size: 1.3rem;
+  }
+  .form-header p {
+    font-size: 0.8rem;
+  }
+  .input-wrapper {
+    font-size: 0.9rem;
+  }
+  .toggle-password {
+    font-size: 1rem;
+  }
+  .form-footer {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive cho màn hình rất nhỏ */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-footer {
+    font-size: 0.75rem;
+  }
+  .info-box {
+    padding: 1rem;
+  }
+  .info-box h3 {
+    font-size: 1rem;
+  }
+  .info-box ul li {
+    font-size: 0.75rem;
+  }
+  .promo-image img {
+    max-height: 100px;
+  }
+}

@@ -1,0 +1,148 @@
+<!-- login/login.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="sign-up.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Container chính cho form 2 cột -->
+      <div class="login-container">
+        <!-- Cột trái: Thông tin lợi ích -->
+        <div class="login-column">
+          <div class="info-box">
+            <h3>Lợi ích khi tạo tài khoản</h3>
+            <ul>
+              <li>Theo dõi đơn hàng và lịch sử mua sắm</li>
+              <li>Nhận thông báo khuyến mãi sớm</li>
+              <li>Lưu danh sách sản phẩm yêu thích</li>
+              <li>Hỗ trợ khách hàng ưu tiên</li>
+            </ul>
+            <div class="promo-image">
+              <img src="https://placehold.co/300x200?text=PharmaHub+Promo" alt="Khuyến mãi đặc biệt" style="width: 100%; height: auto; border-radius: 8px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Form đăng ký -->
+        <div class="login-column">
+          <div class="login-form">
+            <!-- Logo -->
+            <div class="form-header">
+              <div class="icon-circle">
+                <span class="icon-user">👤</span>
+              </div>
+              <h2>Đăng ký tài khoản</h2>
+              <p>Tạo tài khoản mới để mua thuốc trực tuyến</p>
+            </div>
+
+            <!-- Form -->
+            <form id="register-form">
+              <!-- Họ và tên -->
+              <div class="form-group">
+                <label for="fullname">Họ và tên *</label>
+                <div class="input-wrapper">
+                  <span class="icon-input">👤</span>
+                  <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên" required>
+                </div>
+                <!-- Div hiển thị lỗi cho Họ và tên -->
+                <div class="error-message" id="error-fullname" style="display:none;"></div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <div class="input-wrapper">
+                  <span class="icon-input">✉️</span>
+                  <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email" required>
+                </div>
+                 <!-- Div hiển thị lỗi cho Email -->
+                <div class="error-message" id="error-email" style="display:none;"></div>
+              </div>
+
+              <!-- Số điện thoại -->
+              <div class="form-group">
+                <label for="phone">Số điện thoại *</label>
+                <div class="input-wrapper">
+                  <span class="icon-input">📞</span>
+                  <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                </div>
+                 <!-- Div hiển thị lỗi cho Số điện thoại -->
+                <div class="error-message" id="error-phone" style="display:none;"></div>
+              </div>
+
+              <!-- Mật khẩu -->
+              <div class="form-group">
+                <label for="password">Mật khẩu *</label>
+                <div class="input-wrapper">
+                  <span class="icon-input">🔒</span>
+                  <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                  <span class="toggle-password" title="Hiện/Ẩn mật khẩu">👁️</span>
+                </div>
+                 <!-- Div hiển thị lỗi cho Mật khẩu -->
+                <div class="error-message" id="error-password" style="display:none;"></div>
+              </div>
+
+              <!-- Nhập lại mật khẩu -->
+              <div class="form-group">
+                <label for="confirm-password">Nhập lại mật khẩu *</label>
+                <div class="input-wrapper">
+                  <span class="icon-input">🔒</span>
+                  <input type="password" id="confirm-password" name="confirm-password" placeholder="Nhập lại mật khẩu" required>
+                  <span class="toggle-password" title="Hiện/Ẩn mật khẩu">👁️</span>
+                </div>
+                 <!-- Div hiển thị lỗi cho Nhập lại mật khẩu -->
+                <div class="error-message" id="error-confirm-password" style="display:none;"></div>
+              </div>
+
+              <!-- Điều khoản -->
+              <div class="form-group">
+                <div class="checkbox-wrapper">
+                  <input type="checkbox" id="terms" name="terms" required>
+                  <label for="terms">Tôi đồng ý với <a href="#" class="policy-link">Điều khoản sử dụng</a> và <a href="#" class="policy-link">Chính sách bảo mật</a> *</label>
+                </div>
+                 <!-- Div hiển thị lỗi cho Điều khoản -->
+                <div class="error-message" id="error-terms" style="display:none;"></div>
+              </div>
+
+              <!-- Nút đăng ký -->
+              <button type="submit" id="register-btn" class="btn btn-primary btn-block">Đăng ký</button>
+
+              <!-- Liên kết đăng nhập -->
+              <div class="form-footer">
+                <p>Đã có tài khoản? <a href="../login/login.html" class="login-link">Đăng nhập ngay</a></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang login -->
+  <script src="sign-up.js"></script>
+</body>
+</html>
