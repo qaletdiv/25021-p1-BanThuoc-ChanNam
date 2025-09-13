@@ -126,7 +126,7 @@ function addToCart() {
     const currentUserJson = localStorage.getItem('currentUser');
     if (!currentUserJson) {
         alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
-        window.location.href = '../login.html'; // Cập nhật đường dẫn
+        window.location.href = '../login/login.html'; // Cập nhật đường dẫn
         return;
     }
     let currentUser;
@@ -138,7 +138,7 @@ function addToCart() {
     } catch (e) {
         console.error("Lỗi khi phân tích dữ liệu người dùng:", e);
         alert('Phiên làm việc hết hạn. Vui lòng đăng nhập lại.');
-        window.location.href = '../login.html'; // Cập nhật đường dẫn
+        window.location.href = '../login/login.html'; // Cập nhật đường dẫn
         return;
     }
 
