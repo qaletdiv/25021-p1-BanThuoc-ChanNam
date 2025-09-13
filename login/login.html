@@ -1,0 +1,95 @@
+<!-- login/login.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- Container chính cho form đăng nhập -->
+      <div class="login-container">
+        <div class="login-form">
+          <!-- Logo -->
+          <div class="form-header">
+            <div class="icon-circle">
+              <span class="icon-user">🔒</span>
+            </div>
+            <h2>Đăng nhập</h2>
+            <p>Đăng nhập để tiếp tục mua sắm</p>
+          </div>
+
+          <!-- Form -->
+          <form id="login-form">
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <span class="icon-input">✉️</span>
+                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+              </div>
+              <div class="error-message" id="error-email"></div>
+            </div>
+
+            <!-- Mật khẩu -->
+            <div class="form-group">
+              <label for="password">Mật khẩu</label>
+              <div class="input-wrapper">
+                <span class="icon-input">🔒</span>
+                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                <span class="toggle-password" title="Hiện/Ẩn mật khẩu">👁️</span>
+              </div>
+              <div class="error-message" id="error-password"></div>
+            </div>
+
+            <!-- Ghi nhớ đăng nhập và Quên mật khẩu -->
+            <div class="form-options">
+              <div class="remember-me">
+                <input type="checkbox" id="remember-me" name="remember-me">
+                <label for="remember-me">Ghi nhớ đăng nhập</label>
+              </div>
+              <a href="#" class="forgot-password">Quên mật khẩu?</a>
+            </div>
+
+            <!-- Nút đăng nhập -->
+            <button type="submit" id="login-btn" class="btn btn-primary btn-block">Đăng nhập</button>
+
+            <!-- Hoặc và liên kết đăng ký -->
+            <div class="divider">
+              <span>Hoặc</span>
+            </div>
+            <div class="signup-link">
+              <p>Chưa có tài khoản? <a href="../sign-up/sign-up.html" class="login-link">Đăng ký ngay</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang login -->
+  <script src="login.js"></script>
+</body>
+</html>
