@@ -158,11 +158,11 @@ function getGuestNavLinks() {
     return `
         <a href="${basePath}index.html" class="nav-link">Trang chủ</a>
         <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
-        <a href="${basePath}contact.html" class="nav-link">Liên hệ</a>
+        <a href="${basePath}contact/contact.html" class="nav-link">Liên hệ</a>
         <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
-        <a href="${basePath}login.html" class="nav-link">Đăng nhập</a>
-        <a href="${basePath}register.html" class="nav-link register">Đăng ký</a>
-        <a href="${basePath}cart.html" class="nav-link">Giỏ hàng</a>
+        <a href="${basePath}login/login.html" class="nav-link">Đăng nhập</a>
+        <a href="${basePath}sign-up/sign-up.html" class="nav-link register">Đăng ký</a>
+        <a href="${basePath}cart/cart.html" class="nav-link">Giỏ hàng</a>
     `;
 }
 
