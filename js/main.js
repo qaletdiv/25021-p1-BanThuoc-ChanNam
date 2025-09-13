@@ -220,7 +220,7 @@ function loadFooter() {
 function renderFeaturedProducts() {
     const productsContainer = document.getElementById('featured-products');
     if (!productsContainer) {
-        console.error("Không tìm thấy phần tử với id='featured-products'");
+        // console.error("Không tìm thấy phần tử với id='featured-products'");
         return;
     }
 
@@ -288,7 +288,7 @@ function renderFeaturedProducts() {
 function renderCategories() {
     const categoriesContainer = document.getElementById('categories');
      if (!categoriesContainer) {
-        console.error("Không tìm thấy phần tử với id='categories'");
+        // console.error("Không tìm thấy phần tử với id='categories'");
         return;
     }
 

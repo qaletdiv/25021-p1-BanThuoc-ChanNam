@@ -190,31 +190,6 @@
   display: none; /* Ẩn mặc định */
 }
 
-#error-fullname {
-  display:none;
-}
-
-#error-email {
-  display:none;
-}
-
-#error-phone {
-  display:none;
-}
-
-#error-confirm-password {
-  display:none;
-}
-
-#error-password {
-  display:none;
-}
-
-#error-terms {
-  display:none;
-}
-
-
 /* Responsive Design */
 @media (max-width: 768px) {
   /* Trên thiết bị di động, gom cả 2 cột thành 1 cột */

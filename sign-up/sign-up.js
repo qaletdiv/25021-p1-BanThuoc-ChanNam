@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
  * Xử lý sự kiện submit form đăng ký
  */
 function handleRegisterSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); // Ngăn chặn hành vi mặc định của form
 
     // 1. Lấy dữ liệu từ form
     const formData = new FormData(e.target);
@@ -42,7 +42,11 @@ function handleRegisterSubmit(e) {
 
     // 4. Nếu có lỗi, hiển thị lỗi tại vị trí tương ứng
     if (errors.length > 0) {
-        showFieldErrors(errors); // Gọi hàm mới để hiển thị lỗi
+        console.log("Validation errors found:", errors); // Dòng debug 8
+        // --- SỬA ĐỔI TẠI ĐÂY ---
+        // Thay vì gọi showFieldErrors(errors), hãy gọi trực tiếp với từng lỗi
+        // Nhưng cách tốt nhất là đảm bảo showFieldErrors hoạt động đúng
+        showFieldErrors(errors); // Gọi hàm này
         return; // Dừng lại nếu có lỗi
     }
 
@@ -80,21 +84,22 @@ function clearAllErrors() {
  */
 function showFieldErrors(errors) {
     errors.forEach(error => {
+        // Chuyển đổi chuỗi lỗi thành chữ thường để so sánh
+        const lowerCaseError = error.toLowerCase();
         // Duyệt qua từng lỗi và hiển thị nó ở vị trí tương ứng
-        // Giả định chuỗi lỗi chứa tên trường để nhận diện
-        if (error.includes('Họ và tên')) {
+        if (lowerCaseError.includes('họ và tên')) {
             showFieldError('fullname', error);
-        } else if (error.includes('email')) {
+        } else if (lowerCaseError.includes('email')) {
             showFieldError('email', error);
-        } else if (error.includes('số điện thoại')) {
+        } else if (lowerCaseError.includes('số điện thoại')) {
             showFieldError('phone', error);
-        } else if (error.includes('mật khẩu')) { // Kiểm tra 'mật khẩu' trước 'nhập lại'
-             if (error.includes('nhập lại')) {
+        } else if (lowerCaseError.includes('mật khẩu')) {
+             if (lowerCaseError.includes('nhập lại')) {
                  showFieldError('confirm-password', error);
              } else {
                  showFieldError('password', error);
              }
-        } else if (error.includes('đồng ý')) {
+        } else if (lowerCaseError.includes('đồng ý')) {
             showFieldError('terms', error);
         }
         // Thêm các trường hợp khác nếu cần
@@ -107,11 +112,11 @@ function showFieldErrors(errors) {
  * @param {string} message - Nội dung thông báo lỗi
  */
 function showFieldError(fieldName, message) {
-    const errorElementId = `error-${fieldName}`;
+    const errorElementId = `error-${fieldName}`; // Tạo ID dựa trên tên trường
     const errorElement = document.getElementById(errorElementId);
     if (errorElement) {
         errorElement.textContent = message;
-        errorElement.style.display = 'block'; // Hiển thị div lỗi
+        errorElement.style.display = 'block';
     }
 }
 
