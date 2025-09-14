@@ -68,10 +68,10 @@ function loadHeader() {
                 navLinks = `
                     <a href="${basePath}index.html" class="nav-link">Trang chủ</a>
                     <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
-                    <a href="${basePath}contact.html" class="nav-link">Liên hệ</a>
-                    <a href="${basePath}account.html" class="nav-link">Tài khoản của tôi (${currentUser.name})</a>
+                    <a href="${basePath}contact/contact.html" class="nav-link">Liên hệ</a>
+                    <a href="${basePath}my-account/my-account.html" class="nav-link">Tài khoản của tôi (${currentUser.name})</a>
                     <a href="#" id="logout-link" class="nav-link">Đăng xuất</a>
-                    <a href="${basePath}cart.html" class="nav-link">${cartText}</a>
+                    <a href="${basePath}cart/cart.html" class="nav-link">${cartText}</a>
                 `;
             } else {
                 throw new Error("Dữ liệu người dùng không hợp lệ");
@@ -159,10 +159,8 @@ function getGuestNavLinks() {
         <a href="${basePath}index.html" class="nav-link">Trang chủ</a>
         <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
         <a href="${basePath}contact/contact.html" class="nav-link">Liên hệ</a>
-        <a href="${basePath}product-list/product-list.html" class="nav-link">Sản phẩm</a>
         <a href="${basePath}login/login.html" class="nav-link">Đăng nhập</a>
         <a href="${basePath}sign-up/sign-up.html" class="nav-link register">Đăng ký</a>
-        <a href="${basePath}cart/cart.html" class="nav-link">Giỏ hàng</a>
     `;
 }
 

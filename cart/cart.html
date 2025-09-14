@@ -1,0 +1,76 @@
+<!-- login/login.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Giỏ hàng của bạn</h1>
+      <p>Quản lý các sản phẩm trong giỏ hàng</p>
+
+      <div class="cart-container">
+        <!-- Danh sách sản phẩm trong giỏ hàng -->
+        <div class="cart-items">
+          <h2>Sản phẩm trong giỏ hàng (<span id="item-count">0</span> sản phẩm)</h2>
+          <div id="cart-item-list">
+            <!-- Sản phẩm sẽ được render ở đây -->
+          </div>
+        </div>
+
+        <!-- Tóm tắt đơn hàng -->
+        <div class="order-summary">
+          <h2>Tóm tắt đơn hàng</h2>
+          <div class="summary-item">
+            <span>Tạm tính (<span id="total-items">0</span> sản phẩm)</span>
+            <span id="subtotal">0 VND</span>
+          </div>
+          <div class="summary-item">
+            <span>Phí vận chuyển</span>
+            <span id="shipping-cost">25.000 VND</span>
+          </div>
+          <div class="summary-item total">
+            <strong>Tổng cộng</strong>
+            <strong id="total-price">0 VND</strong>
+          </div>
+          <button id="checkout-btn" class="btn btn-primary">Tiến hành thanh toán</button>
+          <button id="continue-shopping-btn" class="btn btn-secondary">Tiếp tục mua hàng</button>
+          <div class="free-shipping-info">
+            <div class="icon">🚚</div>
+            <div class="text">
+              <strong> Miễn phí vận chuyển</strong>
+              <p>Cho đơn hàng từ 500.000 VND</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang login -->
+  <script src="cart.js"></script>
+</body>
+</html>
