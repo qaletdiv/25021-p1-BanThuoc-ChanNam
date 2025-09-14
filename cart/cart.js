@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function renderCart() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser || !currentUser.id) {
-        console.error("Không tìm thấy thông tin người dùng hợp lệ.");
+        console.error("renderCart: Không tìm thấy thông tin người dùng hợp lệ.");
         window.location.href = '../login/login.html';
         return;
     }
@@ -35,7 +35,7 @@ function renderCart() {
     try {
         cart = JSON.parse(localStorage.getItem('cart')) || [];
     } catch (e) {
-        console.error("Lỗi khi lấy dữ liệu giỏ hàng:", e);
+        console.error("renderCart: Lỗi khi lấy dữ liệu giỏ hàng:", e);
         cart = [];
     }
 
@@ -86,25 +86,25 @@ function renderCart() {
         try {
             products = JSON.parse(localStorage.getItem('products')) || [];
         } catch (e) {
-            console.error("Lỗi khi lấy dữ liệu sản phẩm:", e);
+            console.error("renderCart: Lỗi khi lấy dữ liệu sản phẩm:", e);
         }
         const product = products.find(p => p.id == item.productId);
         if (!product) {
-            console.warn("Không tìm thấy thông tin sản phẩm với ID:", item.productId);
+            console.warn("renderCart: Không tìm thấy thông tin sản phẩm với ID:", item.productId);
             return; // Bỏ qua item này nếu không tìm thấy sản phẩm
         }
 
         // Lấy đơn vị đã chọn
         const selectedUnit = product.units.find(u => u.name === item.unit);
         if (!selectedUnit) {
-            console.warn("Không tìm thấy đơn vị sản phẩm:", item.unit, "cho sản phẩm ID:", item.productId);
+            console.warn("renderCart: Không tìm thấy đơn vị sản phẩm:", item.unit, "cho sản phẩm ID:", item.productId);
             return; // Bỏ qua item này nếu không tìm thấy đơn vị
         }
 
         // Tính thành tiền cho sản phẩm này
         const itemTotal = selectedUnit.price * item.quantity;
 
-        // Thêm data-item-id vào div.cart-item để dễ xử lý sự kiện
+        // --- QUAN TRỌNG: Sử dụng item.id cho data-item-id ---
         cartHTML += `
             <div class="cart-item" data-item-id="${item.id}">
                 <div class="cart-item-image">
@@ -138,7 +138,7 @@ function renderCart() {
 
             const itemId = cartItemElement.dataset.itemId;
             if (!itemId) {
-                console.error("Không tìm thấy data-item-id trên phần tử .cart-item");
+                console.error("renderCart EventListener: Không tìm thấy data-item-id trên phần tử .cart-item");
                 return;
             }
 
@@ -151,7 +151,7 @@ function renderCart() {
             }
         });
     } else {
-        console.error("Không tìm thấy phần tử .cart-container để gắn sự kiện.");
+        console.error("renderCart: Không tìm thấy phần tử .cart-container để gắn sự kiện.");
     }
 
     // Gắn sự kiện cho nút "Tiến hành thanh toán"
@@ -173,7 +173,7 @@ function renderCart() {
 
 /**
  * Cập nhật số lượng sản phẩm trong giỏ hàng
- * @param {string} itemId - ID của sản phẩm trong giỏ hàng (dưới dạng chuỗi)
+ * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  * @param {number} delta - Số lượng cần thay đổi (+1, -1)
  */
 function updateQuantity(itemId, delta) {
@@ -196,7 +196,7 @@ function updateQuantity(itemId, delta) {
         return;
     }
 
-    // Tìm index của item trong toàn bộ giỏ hàng (không chỉ của user)
+    // --- ĐÃ SỬA: Tìm item dựa trên item.id ---
     const itemIndex = cart.findIndex(item => item.id == itemId && item.userId == currentUser.id);
 
     if (itemIndex > -1) {
@@ -222,13 +222,13 @@ function updateQuantity(itemId, delta) {
             console.error("updateQuantity: Lỗi khi lưu giỏ hàng:", e);
         }
     } else {
-        console.warn("updateQuantity: Không tìm thấy item với ID:", itemId);
+        console.warn("updateQuantity: Không tìm thấy item với ID:", itemId, "cho user:", currentUser.id);
     }
 }
 
 /**
  * Xóa sản phẩm khỏi giỏ hàng
- * @param {string} itemId - ID của sản phẩm trong giỏ hàng (dưới dạng chuỗi)
+ * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  */
 function removeFromCart(itemId) {
     if (!itemId) {
@@ -250,8 +250,7 @@ function removeFromCart(itemId) {
         return;
     }
 
-    // Lọc ra các item KHÔNG phải là item cần xóa của người dùng hiện tại
-    // Cách này an toàn và rõ ràng hơn
+    // --- ĐÃ SỬA: Lọc item dựa trên item.id ---
     const newCart = cart.filter(item => {
         // Giữ lại item nếu:
         // 1. Nó không thuộc về người dùng hiện tại, hoặc
@@ -268,7 +267,7 @@ function removeFromCart(itemId) {
     // Lưu lại giỏ hàng mới vào localStorage
     try {
         localStorage.setItem('cart', JSON.stringify(newCart));
-        console.log("Item với ID", itemId, "đã được xóa khỏi giỏ hàng của user", currentUser.id);
+        console.log("removeFromCart: Item với ID", itemId, "đã được xóa khỏi giỏ hàng của user", currentUser.id);
         // Cập nhật lại giao diện
         renderCart();
     } catch (e) {

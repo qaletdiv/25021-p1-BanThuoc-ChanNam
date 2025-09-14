@@ -1,9 +1,14 @@
+// product-detail/product-detail.js
+
 let currentProduct = null;
 let selectedUnit = null;
 let selectedQuantity = 1;
 
 // --- Khởi tạo khi DOM load xong ---
 document.addEventListener('DOMContentLoaded', function () {
+    // loadData(); // Không cần gọi nữa nếu main.js đã gọi
+    // loadHeader(); // Không cần gọi nữa nếu main.js đã gọi
+    // loadFooter(); // Không cần gọi nữa nếu main.js đã gọi
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     if (productId) {
@@ -169,7 +174,11 @@ function addToCart() {
         alert(`Đã cập nhật số lượng. Giỏ hàng hiện có ${cart[existingItemIndex].quantity} ${selectedUnit.name} ${currentProduct.name}.`);
     } else {
         // Nếu chưa có, thêm mới
+        // --- ĐÃ THÊM ID DUY NHẤT CHO MỤC GIỎ HÀNG ---
         const cartItem = {
+            // Tạo một ID duy nhất cho mục giỏ hàng này
+            // Date.now() có thể tạo ID trùng nếu click nhanh, nên kết hợp thêm Math.random()
+            id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9),
             userId: currentUser.id, // Gán userId
             productId: currentProduct.id,
             productName: currentProduct.name,
@@ -200,4 +209,13 @@ function addToCart() {
     if (quantityInput) {
         quantityInput.value = '1';
     }
+}
+
+// --- Hàm tiện ích: Định dạng tiền tệ ---
+function formatCurrency(amount) {
+    // Kiểm tra đầu vào hợp lệ
+    if (typeof amount !== 'number' || isNaN(amount)) {
+        return 'Liên hệ';
+    }
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
