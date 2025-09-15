@@ -76,6 +76,9 @@ function renderCart() {
         
         // Cập nhật thông báo miễn phí vận chuyển
         updateFreeShippingInfo(0);
+        
+        // Cập nhật số lượng giỏ hàng trên header
+        updateHeaderCartCount();
         return;
     }
 
@@ -141,7 +144,7 @@ function renderCart() {
         cartHTML += `
             <div class="cart-item" data-item-id="${item.id}">
                 <div class="cart-item-image">
-                    <img src="../${product.image}" alt="${product.name}">
+                    <img src="../${product.image || 'https://placehold.co/80x80?text=No+Image'}" alt="${product.name}">
                 </div>
                 <div class="cart-item-info">
                     <h3>${product.name}</h3>
@@ -159,6 +162,9 @@ function renderCart() {
         `;
     });
     cartItemContainer.innerHTML = cartHTML;
+    
+    // Cập nhật số lượng giỏ hàng trên header
+    updateHeaderCartCount();
 }
 
 /**
@@ -200,7 +206,9 @@ function updateFreeShippingInfo(subtotal) {
  * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  * @param {number} delta - Số lượng cần thay đổi (+1, -1)
  */
-function updateQuantity(itemId, delta) {  
+function updateQuantity(itemId, delta) {
+    console.log("updateQuantity called with itemId:", itemId, "delta:", delta);
+    
     if (!itemId) {
         console.error("updateQuantity: Thiếu itemId");
         return;
@@ -242,6 +250,8 @@ function updateQuantity(itemId, delta) {
             console.log("Quantity updated successfully");
             // Cập nhật lại giao diện
             renderCart();
+            // Cập nhật số lượng giỏ hàng trên header
+            updateHeaderCartCount();
         } catch (e) {
             console.error("updateQuantity: Lỗi khi lưu giỏ hàng:", e);
         }
@@ -255,6 +265,8 @@ function updateQuantity(itemId, delta) {
  * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  */
 function removeFromCart(itemId) {
+    console.log("removeFromCart called with itemId:", itemId);
+    
     if (!itemId) {
         console.error("removeFromCart: Thiếu itemId");
         return;
@@ -282,14 +294,17 @@ function removeFromCart(itemId) {
     // Kiểm tra xem có item nào bị xóa không
     if (newCart.length === cart.length) {
         console.warn("removeFromCart: Không tìm thấy item với ID:", itemId, "để xóa cho user:", currentUser.id);
-        return; 
+        return; // Không có gì thay đổi
     }
 
     // Lưu lại giỏ hàng mới vào localStorage
     try {
         localStorage.setItem('cart', JSON.stringify(newCart));
+        console.log("Item removed successfully");
         // Cập nhật lại giao diện
         renderCart();
+        // Cập nhật số lượng giỏ hàng trên header
+        updateHeaderCartCount();
     } catch (e) {
         console.error("removeFromCart: Lỗi khi lưu giỏ hàng mới:", e);
     }
