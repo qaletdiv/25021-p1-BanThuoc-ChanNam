@@ -1,0 +1,130 @@
+<!-- login/login.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="order-confirmation.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+
+  <main>
+    <div class="container">
+      <div class="confirmation-container">
+        <!-- Thông báo thành công -->
+        <div class="success-message">
+          <div class="success-icon">✓</div>
+          <h1>Đặt hàng thành công!</h1>
+          <p>Cảm ơn bạn đã mua hàng tại PharmaHub. Mã đơn hàng của bạn là: <strong id="order-id">#12345</strong></p>
+        </div>
+
+        <!-- Tóm tắt đơn hàng -->
+        <div class="order-details">
+          <h2>Thông tin đơn hàng</h2>
+          
+          <!-- Thông tin người nhận -->
+          <div class="recipient-info">
+            <h3>Thông tin người nhận</h3>
+            <div class="info-row">
+              <span class="label">Họ tên:</span>
+              <span id="recipient-name">Nguyễn Văn A</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Số điện thoại:</span>
+              <span id="recipient-phone">0901234567</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Địa chỉ:</span>
+              <span id="recipient-address">123 Nguyễn Văn Linh, Phường 10, Quận 7, TP.HCM</span>
+            </div>
+          </div>
+
+          <!-- Phương thức thanh toán -->
+          <div class="payment-info">
+            <h3>Phương thức thanh toán</h3>
+            <div class="info-row">
+              <span class="label">Phương thức:</span>
+              <span id="payment-method">Thanh toán khi nhận hàng (COD)</span>
+            </div>
+            <div id="bank-transfer-info" class="bank-transfer-info hidden">
+              <div class="info-row">
+                <span class="label">Ngân hàng:</span>
+                <span>Vietcombank</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Số tài khoản:</span>
+                <span>123456789</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Chủ tài khoản:</span>
+                <span>CÔNG TY TNHH PHARMHUB</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Chi nhánh:</span>
+                <span>TP.HCM</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Nội dung chuyển khoản:</span>
+                <span id="transfer-content">Thanh toan don hang #12345</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sản phẩm đã đặt -->
+          <div class="order-items">
+            <h3>Sản phẩm đã đặt</h3>
+            <div id="order-items-list">
+              <!-- Sản phẩm sẽ được render ở đây -->
+            </div>
+          </div>
+
+          <!-- Tổng tiền -->
+          <div class="order-total">
+            <div class="total-row">
+              <span>Tạm tính:</span>
+              <span id="subtotal">0 VND</span>
+            </div>
+            <div class="total-row">
+              <span>Phí vận chuyển:</span>
+              <span id="shipping-cost">0 VND</span>
+            </div>
+            <div class="total-row final">
+              <span>Tổng cộng:</span>
+              <span id="total-amount">0 VND</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nút điều hướng -->
+        <div class="navigation-buttons">
+          <a href="../index.html" class="btn btn-secondary">Tiếp tục mua sắm</a>
+          <a href="../order-history/order-history.html" class="btn btn-primary">Xem lịch sử đơn hàng</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang login -->
+  <script src="order-confirmation.js"></script>
+</body>
+</html>
