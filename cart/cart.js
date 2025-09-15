@@ -193,7 +193,7 @@ function updateFreeShippingInfo(subtotal) {
         freeShippingInfo.innerHTML = `
             <div class="icon">🚚</div>
             <div class="text">
-                <strong>Miễn phí vận chuyển</strong>
+                <strong>Miễn phí vận chuyển cho đơn hàng từ 500.000 VND</strong>
                 <p>Thêm ${formatCurrency(remaining)} để được miễn phí vận chuyển</p>
             </div>
         `;
@@ -206,9 +206,7 @@ function updateFreeShippingInfo(subtotal) {
  * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  * @param {number} delta - Số lượng cần thay đổi (+1, -1)
  */
-function updateQuantity(itemId, delta) {
-    console.log("updateQuantity called with itemId:", itemId, "delta:", delta);
-    
+function updateQuantity(itemId, delta) {   
     if (!itemId) {
         console.error("updateQuantity: Thiếu itemId");
         return;
@@ -264,9 +262,7 @@ function updateQuantity(itemId, delta) {
  * Xóa sản phẩm khỏi giỏ hàng
  * @param {string} itemId - ID của MỤC trong giỏ hàng (dưới dạng chuỗi)
  */
-function removeFromCart(itemId) {
-    console.log("removeFromCart called with itemId:", itemId);
-    
+function removeFromCart(itemId) {   
     if (!itemId) {
         console.error("removeFromCart: Thiếu itemId");
         return;
