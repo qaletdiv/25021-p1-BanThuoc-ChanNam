@@ -1,0 +1,121 @@
+<!-- login/login.html -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+
+  <main>
+    <div class="container">
+      <h1>Thông tin thanh toán</h1>
+      <p>Vui lòng kiểm tra thông tin đơn hàng và điền thông tin giao hàng</p>
+
+      <div class="checkout-container">
+        <!-- Thông tin giao hàng và Phương thức thanh toán -->
+        <div class="checkout-left">
+          <!-- Thông tin giao hàng -->
+          <div class="shipping-info">
+            <h2>Thông tin giao hàng</h2>
+            <form id="shipping-form">
+              <div class="form-group">
+                <label for="fullname">Họ tên người nhận</label>
+                <input type="text" id="fullname" name="fullname" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Số điện thoại</label>
+                <input type="tel" id="phone" name="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Địa chỉ chi tiết</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+              </div>
+              <div class="saved-addresses">
+                <h3>Địa chỉ đã lưu</h3>
+                <div id="saved-addresses-list">
+                  <!-- Địa chỉ đã lưu sẽ được render ở đây -->
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Phương thức thanh toán -->
+          <div class="payment-method">
+            <h2>Phương thức thanh toán</h2>
+            <div class="payment-options">
+              <div class="payment-option">
+                <input type="radio" id="payment-cod" name="payment-method" value="cod" checked>
+                <label for="payment-cod">Thanh toán khi nhận hàng (Tiền mặt - COD)</label>
+              </div>
+              <div class="payment-option">
+                <input type="radio" id="payment-bank" name="payment-method" value="bank">
+                <label for="payment-bank">Chuyển khoản ngân hàng</label>
+              </div>
+            </div>
+            <div id="bank-info" class="bank-info hidden">
+              <h3>Thông tin tài khoản ngân hàng</h3>
+              <div class="bank-details">
+                <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                <p><strong>Số tài khoản:</strong> 123456789</p>
+                <p><strong>Chủ tài khoản:</strong> CÔNG TY TNHH PHARMHUB</p>
+                <p><strong>Chi nhánh:</strong> TP.HCM</p>
+                <p><strong>Nội dung chuyển khoản:</strong> THANHTOAN_[Mã đơn hàng]</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tóm tắt đơn hàng -->
+        <div class="checkout-right">
+          <div class="order-summary">
+            <h2>Tóm tắt đơn hàng</h2>
+            <div id="checkout-items">
+              <!-- Sản phẩm sẽ được render ở đây -->
+            </div>
+            <div class="summary-details">
+              <div class="summary-item">
+                <span>Tạm tính (<span id="checkout-total-items">0</span> sản phẩm)</span>
+                <span id="checkout-subtotal">0 VND</span>
+              </div>
+              <div class="summary-item">
+                <span>Phí vận chuyển</span>
+                <span id="checkout-shipping">0 VND</span>
+              </div>
+              <div class="summary-item total">
+                <strong>Tổng cộng</strong>
+                <strong id="checkout-total">0 VND</strong>
+              </div>
+            </div>
+            <button id="complete-order-btn" class="btn btn-primary">Hoàn tất đơn hàng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <!-- Script chính -->
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang login -->
+  <script src="checkout.js"></script>
+</body>
+</html>
