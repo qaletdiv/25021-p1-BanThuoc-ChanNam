@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function() {
-            alert("Chức năng thanh toán đang được phát triển.");
+            window.location.href = '../checkout/checkout.html';
         });
     }
 
