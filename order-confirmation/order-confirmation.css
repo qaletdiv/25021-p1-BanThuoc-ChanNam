@@ -1,0 +1,260 @@
+/* order-confirmation/order-confirmation.css */
+
+.confirmation-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  border: 1px solid #10b981;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.success-message h1 {
+  color: #065f46;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.success-message p {
+  color: #047857;
+  font-size: 1.125rem;
+}
+
+.success-message strong {
+  color: #065f46;
+  font-weight: bold;
+}
+
+.order-details {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.order-details h2 {
+  color: #1f2937;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-details h3 {
+  color: #1f2937;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.order-details h3:first-child {
+  margin-top: 0;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+.info-row .label {
+  font-weight: 600;
+  color: #4b5563;
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.info-row span:last-child {
+  color: #1f2937;
+  flex: 1;
+}
+
+.order-items {
+  margin-top: 1.5rem;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 1rem;
+}
+
+.order-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-item-info {
+  flex: 1;
+}
+
+.order-item-info h4 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+}
+
+.order-item-info .unit {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.order-item-info .price {
+  font-weight: bold;
+  color: #10b981;
+  font-size: 0.875rem;
+}
+
+.order-item-quantity {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-left: 1rem;
+}
+
+.order-total {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.total-row.final {
+  font-weight: bold;
+  font-size: 1.125rem;
+  color: #1f2937;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.total-row.final span:last-child {
+  color: #10b981;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #059669;
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .confirmation-container {
+    margin: 1rem auto;
+  }
+  
+  .success-message {
+    padding: 1.5rem;
+  }
+  
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+  
+  .success-message h1 {
+    font-size: 1.5rem;
+  }
+  
+  .success-message p {
+    font-size: 1rem;
+  }
+  
+  .order-details {
+    padding: 1.5rem;
+  }
+  
+  .info-row {
+    flex-direction: column;
+  }
+  
+  .info-row .label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  
+  .navigation-buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
