@@ -61,8 +61,7 @@ function loadHeader() {
                 // Tính số lượng sản phẩm trong giỏ hàng cho người dùng hiện tại
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const userCartItems = cart.filter(item => item.userId == currentUser.id);
-                const cartCount = userCartItems.length;
-                const cartText = cartCount > 0 ? `Giỏ hàng (${cartCount})` : 'Giỏ hàng';
+                const cartCount = userCartItems.reduce((total, item) => total + (item.quantity || 1), 0); // Tính tổng số lượng
 
                 // --- Sử dụng basePath ---
                 navLinks = `
@@ -71,7 +70,10 @@ function loadHeader() {
                     <a href="${basePath}contact/contact.html" class="nav-link">Liên hệ</a>
                     <a href="${basePath}my-account/my-account.html" class="nav-link">Tài khoản của tôi (${currentUser.name})</a>
                     <a href="#" id="logout-link" class="nav-link">Đăng xuất</a>
-                    <a href="${basePath}cart/cart.html" class="nav-link">${cartText}</a>
+                    <a href="${basePath}cart/cart.html" class="nav-link cart-link">
+                        Giỏ hàng
+                        <span class="cart-count" id="header-cart-count">${cartCount > 0 ? cartCount : ''}</span>
+                    </a>
                 `;
             } else {
                 throw new Error("Dữ liệu người dùng không hợp lệ");
@@ -103,9 +105,6 @@ function loadHeader() {
             </div>
             <nav class="nav-menu">
               ${navLinks}
-              <div class="cart">
-                <span class="cart-count" id="header-cart-count">0</span> <!-- Placeholder, sẽ cập nhật sau -->
-              </div>
             </nav>
           </div>
         </div>
@@ -356,7 +355,10 @@ function updateHeaderCartCount() {
             console.error("Lỗi khi cập nhật số lượng giỏ hàng header:", e);
         }
     }
-    cartCountElement.textContent = count > 0 ? count : '0'; // Hiển thị 0 nếu không có item
-    // Ẩn/hiện badge nếu không có sản phẩm (tùy chọn)
-    cartCountElement.style.display = count > 0 ? 'flex' : 'none';
+    
+    // Cập nhật nội dung: chỉ hiển thị số lượng nếu > 0
+    cartCountElement.textContent = count > 0 ? count : '';
+    
+    // // Ẩn/hiện badge nếu không có sản phẩm
+    // cartCountElement.style.display = count > 0 ? 'flex' : 'none';
 }
