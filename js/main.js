@@ -126,16 +126,25 @@ function loadHeader() {
         }
     }
 
-    // Gắn sự kiện cho tìm kiếm (có thể phát triển sau)
+    // Gắn sự kiện cho tìm kiếm
     const searchBtn = document.getElementById('search-btn');
     const searchInput = document.getElementById('search-input');
     if (searchBtn && searchInput) {
         searchBtn.addEventListener('click', function() {
             const query = searchInput.value.trim();
             if (query) {
-                 alert('Tìm kiếm cho: ' + query); // Placeholder cho chức năng tìm kiếm
-                 // TODO: Thực hiện tìm kiếm hoặc chuyển hướng
-                 // window.location.href = `${basePath}product-list/product-list.html?search=${encodeURIComponent(query)}`;
+                // Xác định đường dẫn tương đối đến trang danh sách sản phẩm
+                let pathPrefix = '';
+                
+                // Kiểm tra nếu trang hiện tại nằm trong một thư mục con
+                if (window.location.pathname.includes('/product-detail/') || 
+                    window.location.pathname.includes('/login/') || 
+                    window.location.pathname.includes('/order-confirmation/')) {
+                    pathPrefix = '../';
+                }
+                
+                // Chuyển hướng đến trang danh sách sản phẩm với tham số tìm kiếm
+                window.location.href = `../${pathPrefix}product-list/product-list.html?search=${encodeURIComponent(query)}`;
             }
         });
 
