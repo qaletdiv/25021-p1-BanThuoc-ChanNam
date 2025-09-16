@@ -309,9 +309,9 @@ function renderCategories() {
     categories.forEach((category, index) => {
         const colorClass = colors[index % colors.length]; // Luân phiên màu
 
-        // --- Sử dụng basePath cho liên kết danh mục ---
+        // --- Cập nhật để truyền tham số danh mục ---
         categoryHTML += `
-            <div class="category-card">
+            <div class="category-card" data-category="${encodeURIComponent(category.name)}">
                 <div class="category-icon ${colorClass}">
                 </div>
                 <h3>${category.name}</h3>
@@ -321,6 +321,14 @@ function renderCategories() {
         `;
     });
     categoriesContainer.innerHTML = categoryHTML;
+    
+    // Thêm sự kiện click cho toàn bộ thẻ danh mục
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const categoryName = this.dataset.category;
+            window.location.href = `${basePath}product-list/product-list.html?category=${categoryName}`;
+        });
+    });
 }
 
 /**

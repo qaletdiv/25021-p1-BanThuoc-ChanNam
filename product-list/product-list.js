@@ -17,6 +17,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // --- Hàm khởi tạo riêng của trang product-list ---
 function initializeProductList() {
+    // Đọc tham số từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    
+    // Nếu có tham số danh mục, áp dụng bộ lọc
+    if (categoryParam) {
+        currentFilters.categories = [decodeURIComponent(categoryParam)];
+        
+        // Cập nhật giao diện bộ lọc để hiển thị danh mục đã chọn
+        setTimeout(() => {
+            const categoryCheckbox = document.querySelector(`input[data-type="category"][value="${decodeURIComponent(categoryParam)}"]`);
+            if (categoryCheckbox) {
+                categoryCheckbox.checked = true;
+            }
+        }, 100);
+    }
+    
     renderFilters();
     setupEventListeners();
     applyFiltersAndSort(); // Load lần đầu với tất cả sản phẩm
@@ -364,10 +381,43 @@ function applyFiltersAndSort() {
         console.error("Lỗi khi lấy dữ liệu sản phẩm:", e);
         products = [];
     }
+    
     // Áp dụng bộ lọc
     filteredProducts = applyFilters(products);
+    
+    // Cập nhật tiêu đề trang dựa trên bộ lọc
+    updatePageTitle();
+    
     // Áp dụng sắp xếp
     filteredProducts = applySorting(filteredProducts);
+    
     // Render kết quả
     renderProductList(filteredProducts);
+}
+
+/**
+ * Cập nhật tiêu đề trang dựa trên bộ lọc đang áp dụng
+ */
+function updatePageTitle() {
+    const pageTitleElement = document.getElementById('page-title');
+    const pageSubtitleElement = document.getElementById('page-subtitle');
+    
+    if (!pageTitleElement || !pageSubtitleElement) return;
+    
+    if (currentFilters.categories.length > 0) {
+        const categoryName = currentFilters.categories[0];
+        pageTitleElement.textContent = `Danh mục: ${categoryName}`;
+        pageSubtitleElement.textContent = `Các sản phẩm thuộc danh mục ${categoryName}`;
+    } else if (currentFilters.types.length > 0) {
+        const typeNames = {
+            'kedon': 'Thuốc kê đơn',
+            'khongkedon': 'Thuốc không kê đơn'
+        };
+        const typeName = currentFilters.types.map(type => typeNames[type] || type).join(', ');
+        pageTitleElement.textContent = `Loại sản phẩm: ${typeName}`;
+        pageSubtitleElement.textContent = `Các sản phẩm thuộc loại ${typeName}`;
+    } else {
+        pageTitleElement.textContent = 'Danh sách sản phẩm';
+        pageSubtitleElement.textContent = 'Tất cả sản phẩm';
+    }
 }
