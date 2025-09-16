@@ -34,6 +34,13 @@ const mockProducts = [
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
     image: "images/products/med001.jpg",
+    images: [
+      "images/products/med001-1.jpg",
+      "images/products/med001-2.jfif",
+      "images/products/med001-3.jfif",
+      "images/products/med001-4.jfif",
+      "images/products/med001-5.jfif"
+    ],
     description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
     type: "khongkedon", // hoặc "kedon"
     units: [
