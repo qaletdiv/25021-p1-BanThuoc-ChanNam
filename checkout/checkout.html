@@ -19,12 +19,12 @@
 
   <main>
     <div class="container">
-      <h1>Thông tin thanh toán</h1>
+      <h1>Thông  tin thanh toán</h1>
       <p>Vui lòng kiểm tra thông tin đơn hàng và điền thông tin giao hàng</p>
 
       <div class="checkout-container">
-        <!-- Thông tin giao hàng và Phương thức thanh toán -->
-        <div class="checkout-left">
+        <!-- Cột trái: Thông tin giao hàng và Phương thức thanh toán -->
+        <div class="left-column">
           <!-- Thông tin giao hàng -->
           <div class="shipping-info">
             <h2>Thông tin giao hàng</h2>
@@ -41,11 +41,21 @@
                 <label for="address">Địa chỉ chi tiết</label>
                 <textarea id="address" name="address" rows="3" required></textarea>
               </div>
+              
+              <!-- Phần địa chỉ đã lưu -->
               <div class="saved-addresses">
-                <h3>Địa chỉ đã lưu</h3>
-                <div id="saved-addresses-list">
+                <div class="saved-addresses-header">
+                  <h3>Địa chỉ đã lưu</h3>
+                  <button type="button" id="toggle-saved-addresses" class="btn-text">Hiển thị</button>
+                </div>
+                <div id="saved-addresses-list" class="hidden">
                   <!-- Địa chỉ đã lưu sẽ được render ở đây -->
                 </div>
+              </div>
+              
+              <!-- Nút lưu địa chỉ -->
+              <div class="save-address">
+                <button type="button" id="save-address-btn" class="btn-text">Lưu địa chỉ</button>
               </div>
             </form>
           </div>
@@ -76,8 +86,8 @@
           </div>
         </div>
 
-        <!-- Tóm tắt đơn hàng -->
-        <div class="checkout-right">
+        <!-- Cột phải: Tóm tắt đơn hàng -->
+        <div class="right-column">
           <div class="order-summary">
             <h2>Tóm tắt đơn hàng</h2>
             <div id="checkout-items">

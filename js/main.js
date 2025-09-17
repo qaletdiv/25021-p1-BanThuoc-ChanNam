@@ -126,16 +126,25 @@ function loadHeader() {
         }
     }
 
-    // Gắn sự kiện cho tìm kiếm (có thể phát triển sau)
+    // Gắn sự kiện cho tìm kiếm
     const searchBtn = document.getElementById('search-btn');
     const searchInput = document.getElementById('search-input');
     if (searchBtn && searchInput) {
         searchBtn.addEventListener('click', function() {
             const query = searchInput.value.trim();
             if (query) {
-                 alert('Tìm kiếm cho: ' + query); // Placeholder cho chức năng tìm kiếm
-                 // TODO: Thực hiện tìm kiếm hoặc chuyển hướng
-                 // window.location.href = `${basePath}product-list/product-list.html?search=${encodeURIComponent(query)}`;
+                // Xác định đường dẫn tương đối đến trang danh sách sản phẩm
+                let pathPrefix = '';
+                
+                // Kiểm tra nếu trang hiện tại nằm trong một thư mục con
+                if (window.location.pathname.includes('/product-detail/') || 
+                    window.location.pathname.includes('/login/') || 
+                    window.location.pathname.includes('/order-confirmation/')) {
+                    pathPrefix = '../';
+                }
+                
+                // Chuyển hướng đến trang danh sách sản phẩm với tham số tìm kiếm
+                window.location.href = `../${pathPrefix}product-list/product-list.html?search=${encodeURIComponent(query)}`;
             }
         });
 
@@ -309,9 +318,9 @@ function renderCategories() {
     categories.forEach((category, index) => {
         const colorClass = colors[index % colors.length]; // Luân phiên màu
 
-        // --- Sử dụng basePath cho liên kết danh mục ---
+        // --- Cập nhật để truyền tham số danh mục ---
         categoryHTML += `
-            <div class="category-card">
+            <div class="category-card" data-category="${encodeURIComponent(category.name)}">
                 <div class="category-icon ${colorClass}">
                 </div>
                 <h3>${category.name}</h3>
@@ -321,6 +330,14 @@ function renderCategories() {
         `;
     });
     categoriesContainer.innerHTML = categoryHTML;
+    
+    // Thêm sự kiện click cho toàn bộ thẻ danh mục
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const categoryName = this.dataset.category;
+            window.location.href = `${basePath}product-list/product-list.html?category=${categoryName}`;
+        });
+    });
 }
 
 /**

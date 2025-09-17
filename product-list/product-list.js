@@ -9,6 +9,7 @@ let currentFilters = {
 };
 let currentSort = 'default';
 let filteredProducts = [];
+let currentSearchQuery = ''; // Thêm biến lưu từ khóa tìm kiếm
 
 // --- Khởi tạo khi DOM load xong ---
 document.addEventListener('DOMContentLoaded', function () {
@@ -17,6 +18,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // --- Hàm khởi tạo riêng của trang product-list ---
 function initializeProductList() {
+    // Đọc tham số từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    const searchParam = urlParams.get('search'); // Thêm đọc tham số tìm kiếm
+    
+    // Nếu có tham số tìm kiếm, lưu lại và hiển thị thông tin tìm kiếm
+    if (searchParam) {
+        currentSearchQuery = decodeURIComponent(searchParam);
+        // Hiển thị thông tin tìm kiếm
+        const searchResultInfo = document.getElementById('search-result-info');
+        if (searchResultInfo) {
+            searchResultInfo.style.display = 'flex';
+            document.getElementById('search-keyword').textContent = currentSearchQuery;
+        }
+    }
+    
+    // Nếu có tham số danh mục, áp dụng bộ lọc
+    if (categoryParam) {
+        currentFilters.categories = [decodeURIComponent(categoryParam)];
+        
+        // Cập nhật giao diện bộ lọc để hiển thị danh mục đã chọn
+        setTimeout(() => {
+            const categoryCheckbox = document.querySelector(`input[data-type="category"][value="${decodeURIComponent(categoryParam)}"]`);
+            if (categoryCheckbox) {
+                categoryCheckbox.checked = true;
+            }
+        }, 100);
+    }
+    
     renderFilters();
     setupEventListeners();
     applyFiltersAndSort(); // Load lần đầu với tất cả sản phẩm
@@ -49,6 +79,14 @@ function setupEventListeners() {
             currentSort = this.value;
             currentPage = 1; // Reset về trang đầu
             applyFiltersAndSort();
+        });
+    }
+    
+    // Xóa tìm kiếm (thêm mới)
+    const clearSearchBtn = document.getElementById('clear-search');
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+            clearSearch();
         });
     }
 }
@@ -285,6 +323,24 @@ function clearFilters() {
     applyFiltersAndSort();
 }
 
+// Thêm hàm xóa tìm kiếm
+function clearSearch() {
+    currentSearchQuery = '';
+    // Ẩn phần hiển thị kết quả tìm kiếm
+    const searchResultInfo = document.getElementById('search-result-info');
+    if (searchResultInfo) {
+        searchResultInfo.style.display = 'none';
+    }
+    
+    // Cập nhật URL không có tham số tìm kiếm
+    const newUrl = window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
+    
+    // Reset trang và áp dụng lại bộ lọc
+    currentPage = 1;
+    applyFiltersAndSort();
+}
+
 function applyFilters(products = null) {
     if (!products) {
         try {
@@ -295,6 +351,17 @@ function applyFilters(products = null) {
         }
     }
     let result = [...products]; // Sao chép mảng để không làm thay đổi dữ liệu gốc
+    
+    // Lọc theo từ khóa tìm kiếm (thêm mới)
+    if (currentSearchQuery) {
+        const searchLower = currentSearchQuery.toLowerCase();
+        result = result.filter(p => 
+            p.name.toLowerCase().includes(searchLower) || 
+            (p.description && p.description.toLowerCase().includes(searchLower)) ||
+            (p.category && p.category.toLowerCase().includes(searchLower))
+        );
+    }
+    
     // Lọc theo danh mục
     if (currentFilters.categories.length > 0) {
         result = result.filter(p => currentFilters.categories.includes(p.category));
@@ -334,7 +401,7 @@ function applySorting(products) {
         case 'name-asc':
             return products.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
         case 'name-desc':
-            return products.sort((a, b) => b.name.localeCompare(a.name, 'vi'));
+            return products.sort((a, b) => b.name.localeCompare(b.name, 'vi'));
         case 'price-asc':
             return products.sort((a, b) => {
                 const priceA = a.units && a.units.length > 0 ?
@@ -364,10 +431,55 @@ function applyFiltersAndSort() {
         console.error("Lỗi khi lấy dữ liệu sản phẩm:", e);
         products = [];
     }
+    
     // Áp dụng bộ lọc
     filteredProducts = applyFilters(products);
+    
+    // Cập nhật tiêu đề trang dựa trên bộ lọc
+    updatePageTitle();
+    
     // Áp dụng sắp xếp
     filteredProducts = applySorting(filteredProducts);
+    
     // Render kết quả
     renderProductList(filteredProducts);
+}
+
+/**
+ * Cập nhật tiêu đề trang dựa trên bộ lọc đang áp dụng
+ */
+function updatePageTitle() {
+    const pageTitleElement = document.getElementById('page-title');
+    const pageSubtitleElement = document.getElementById('page-subtitle');
+    
+    if (!pageTitleElement || !pageSubtitleElement) return;
+    
+    // Ưu tiên hiển thị thông tin tìm kiếm nếu có
+    if (currentSearchQuery) {
+        pageTitleElement.textContent = 'Kết quả tìm kiếm';
+        pageSubtitleElement.textContent = `Tìm thấy ${filteredProducts.length} sản phẩm cho từ khóa "${currentSearchQuery}"`;
+    } else if (currentFilters.categories.length > 0) {
+        const categoryName = currentFilters.categories[0];
+        pageTitleElement.textContent = `Danh mục: ${categoryName}`;
+        pageSubtitleElement.textContent = `Các sản phẩm thuộc danh mục ${categoryName}`;
+    } else if (currentFilters.types.length > 0) {
+        const typeNames = {
+            'kedon': 'Thuốc kê đơn',
+            'khongkedon': 'Thuốc không kê đơn'
+        };
+        const typeName = currentFilters.types.map(type => typeNames[type] || type).join(', ');
+        pageTitleElement.textContent = `Loại sản phẩm: ${typeName}`;
+        pageSubtitleElement.textContent = `Các sản phẩm thuộc loại ${typeName}`;
+    } else {
+        pageTitleElement.textContent = 'Danh sách sản phẩm';
+        pageSubtitleElement.textContent = 'Tất cả sản phẩm';
+    }
+}
+
+// --- Hàm tiện ích: Định dạng tiền tệ ---
+function formatCurrency(amount) {
+    if (typeof amount !== 'number' || isNaN(amount)) {
+        return 'Liên hệ';
+    }
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }

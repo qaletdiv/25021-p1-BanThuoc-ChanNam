@@ -1,5 +1,8 @@
 // checkout/checkout.js
 
+// Thêm biến toàn cục để theo dõi trạng thái
+let isUsingSavedAddress = false;
+
 /**
  * Khởi tạo ứng dụng khi trang load xong
  */
@@ -70,6 +73,35 @@ function renderCheckout() {
     
     // Render địa chỉ đã lưu
     renderSavedAddresses(currentUser.id);
+    
+    // Điền thông tin người dùng hiện tại vào form nếu có
+    // Chỉ điền nếu người dùng không đang sử dụng địa chỉ đã lưu
+    if (!isUsingSavedAddress) {
+        prefillUserInfo(currentUser);
+    }
+}
+
+/**
+ * Điền thông tin người dùng vào form
+ * @param {Object} user - Thông tin người dùng
+ */
+function prefillUserInfo(user) {
+    // Nếu người dùng đang sử dụng địa chỉ đã lưu, không điền thông tin mặc định
+    if (isUsingSavedAddress) {
+        return;
+    }
+    
+    const fullnameInput = document.getElementById('fullname');
+    const phoneInput = document.getElementById('phone');
+    
+    // Chỉ điền nếu trường đang trống
+    if (fullnameInput && !fullnameInput.value && user.name) {
+        fullnameInput.value = user.name;
+    }
+    
+    if (phoneInput && !phoneInput.value && user.phone) {
+        phoneInput.value = user.phone;
+    }
 }
 
 /**
@@ -187,32 +219,14 @@ function renderSavedAddresses(userId) {
                 <p><strong>${address.fullname}</strong></p>
                 <p>${address.phone}</p>
                 <p>${address.address}</p>
+                <div class="address-actions">
+                    <button class="use-address-btn" data-address-id="${address.id}">Sử dụng</button>
+                    <button class="delete-address-btn" data-address-id="${address.id}">Xóa</button>
+                </div>
             </div>
         `;
     });
     savedAddressesElement.innerHTML = addressesHTML;
-
-    // Đăng ký sự kiện cho các địa chỉ đã lưu
-    document.querySelectorAll('.saved-address-item').forEach(item => {
-        item.addEventListener('click', function() {
-            // Bỏ chọn tất cả các địa chỉ khác
-            document.querySelectorAll('.saved-address-item').forEach(addr => {
-                addr.classList.remove('selected');
-            });
-            
-            // Chọn địa chỉ hiện tại
-            this.classList.add('selected');
-            
-            // Điền thông tin vào form
-            const addressId = this.dataset.addressId;
-            const address = userAddresses.find(addr => addr.id == addressId);
-            if (address) {
-                document.getElementById('fullname').value = address.fullname;
-                document.getElementById('phone').value = address.phone;
-                document.getElementById('address').value = address.address;
-            }
-        });
-    });
 }
 
 /**
@@ -240,6 +254,227 @@ function registerEventListeners() {
             completeOrder();
         });
     }
+    
+    // Xử lý nút "Hiển thị/Ẩn" địa chỉ đã lưu
+    const toggleSavedAddressesBtn = document.getElementById('toggle-saved-addresses');
+    const savedAddressesList = document.getElementById('saved-addresses-list');
+    
+    if (toggleSavedAddressesBtn && savedAddressesList) {
+        toggleSavedAddressesBtn.addEventListener('click', function() {
+            if (savedAddressesList.classList.contains('hidden')) {
+                savedAddressesList.classList.remove('hidden');
+                this.textContent = 'Ẩn';
+            } else {
+                savedAddressesList.classList.add('hidden');
+                this.textContent = 'Hiển thị';
+            }
+        });
+    }
+    
+    // Xử lý nút "Lưu địa chỉ"
+    const saveAddressBtn = document.getElementById('save-address-btn');
+    if (saveAddressBtn) {
+        saveAddressBtn.addEventListener('click', function() {
+            saveCurrentAddress();
+        });
+    }
+    
+    // Xử lý nút "Sử dụng" địa chỉ đã lưu
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('use-address-btn')) {
+            const addressId = e.target.dataset.addressId;
+            useSavedAddress(addressId);
+        }
+    });
+    
+    // Xử lý nút "Xóa" địa chỉ đã lưu
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-address-btn')) {
+            const addressId = e.target.dataset.addressId;
+            deleteSavedAddress(addressId);
+        }
+    });
+}
+
+/**
+ * Sử dụng địa chỉ đã lưu
+ * @param {string} addressId - ID của địa chỉ
+ */
+function useSavedAddress(addressId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.id) {
+        console.error("useSavedAddress: Không tìm thấy thông tin người dùng hợp lệ.");
+        return;
+    }
+
+    // Đặt cờ là true để ngăn việc điền thông tin mặc định
+    isUsingSavedAddress = true;
+
+    // Lấy danh sách địa chỉ
+    let addresses = [];
+    try {
+        addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+    } catch (e) {
+        console.error("useSavedAddress: Lỗi khi lấy dữ liệu địa chỉ:", e);
+        addresses = [];
+    }
+
+    // Tìm địa chỉ theo ID
+    const address = addresses.find(addr => addr.id == addressId && addr.userId == currentUser.id);
+    if (!address) {
+        console.error("useSavedAddress: Không tìm thấy địa chỉ với ID:", addressId);
+        return;
+    }
+
+    // Điền thông tin vào form
+    const fullnameInput = document.getElementById('fullname');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    
+    if (fullnameInput) fullnameInput.value = address.fullname;
+    if (phoneInput) phoneInput.value = address.phone;
+    if (addressInput) addressInput.value = address.address;
+
+    // Hiển thị thông báo
+    showNotification('Đã sử dụng địa chỉ đã lưu');
+    
+    // Cập nhật UI: Bỏ chọn tất cả các địa chỉ khác và chọn địa chỉ hiện tại
+    document.querySelectorAll('.saved-address-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    const selectedAddressItem = document.querySelector(`.saved-address-item[data-address-id="${addressId}"]`);
+    if (selectedAddressItem) {
+        selectedAddressItem.classList.add('selected');
+    }
+    
+    // Reset cờ sau một khoảng thời gian ngắn để đảm bảo thông tin không bị ghi đè
+    setTimeout(() => {
+        isUsingSavedAddress = false;
+    }, 100);
+}
+
+/**
+ * Xóa địa chỉ đã lưu
+ * @param {string} addressId - ID của địa chỉ
+ */
+function deleteSavedAddress(addressId) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.id) {
+        console.error("deleteSavedAddress: Không tìm thấy thông tin người dùng hợp lệ.");
+        return;
+    }
+
+    // Lấy danh sách địa chỉ
+    let addresses = [];
+    try {
+        addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+    } catch (e) {
+        console.error("deleteSavedAddress: Lỗi khi lấy dữ liệu địa chỉ:", e);
+        addresses = [];
+    }
+
+    // Lọc bỏ địa chỉ cần xóa
+    const newAddresses = addresses.filter(addr => !(addr.id == addressId && addr.userId == currentUser.id));
+    
+    // Kiểm tra xem có địa chỉ nào bị xóa không
+    if (newAddresses.length === addresses.length) {
+        console.error("deleteSavedAddress: Không tìm thấy địa chỉ với ID:", addressId);
+        return;
+    }
+
+    // Lưu danh sách địa chỉ mới
+    try {
+        localStorage.setItem('addresses', JSON.stringify(newAddresses));
+        showNotification('Đã xóa địa chỉ thành công!');
+        
+        // Render lại danh sách địa chỉ
+        renderSavedAddresses(currentUser.id);
+    } catch (e) {
+        console.error("deleteSavedAddress: Lỗi khi lưu địa chỉ:", e);
+        showNotification('Đã xảy ra lỗi khi xóa địa chỉ. Vui lòng thử lại.');
+    }
+}
+
+/**
+ * Lưu địa chỉ hiện tại từ form
+ */
+function saveCurrentAddress() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.id) {
+        console.error("saveCurrentAddress: Không tìm thấy thông tin người dùng hợp lệ.");
+        return;
+    }
+
+    // Lấy thông tin từ form
+    const fullname = document.getElementById('fullname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+
+    // Kiểm tra thông tin bắt buộc
+    if (!fullname || !phone || !address) {
+        showNotification('Vui lòng điền đầy đủ thông tin giao hàng trước khi lưu địa chỉ.');
+        return;
+    }
+
+    // Lấy danh sách địa chỉ
+    let addresses = [];
+    try {
+        addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+    } catch (e) {
+        console.error("saveCurrentAddress: Lỗi khi lấy dữ liệu địa chỉ:", e);
+        addresses = [];
+    }
+
+    // Thêm địa chỉ mới
+    const newAddress = {
+        id: Date.now().toString(), // ID địa chỉ (dùng timestamp)
+        userId: currentUser.id,
+        fullname: fullname,
+        phone: phone,
+        address: address
+    };
+    
+    addresses.push(newAddress);
+
+    // Lưu danh sách địa chỉ
+    try {
+        localStorage.setItem('addresses', JSON.stringify(addresses));
+        showNotification('Lưu địa chỉ thành công!');
+        
+        // Render lại danh sách địa chỉ
+        renderSavedAddresses(currentUser.id);
+    } catch (e) {
+        console.error("saveCurrentAddress: Lỗi khi lưu địa chỉ:", e);
+        showNotification('Đã xảy ra lỗi khi lưu địa chỉ. Vui lòng thử lại.');
+    }
+}
+
+/**
+ * Hiển thị thông báo
+ * @param {string} message - Nội dung thông báo
+ */
+function showNotification(message) {
+    // Tạo phần tử thông báo
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    
+    // Thêm vào body
+    document.body.appendChild(notification);
+    
+    // Hiển thị thông báo
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Ẩn thông báo sau 3 giây
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
 }
 
 /**

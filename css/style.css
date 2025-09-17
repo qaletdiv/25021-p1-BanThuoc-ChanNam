@@ -178,14 +178,16 @@ body {
 }
 
 .btn-primary {
-  background: #fff;
-  color: #1e40af;
+  background: green;
+  color: #FFFDD0;
   width: 100%;
+  
 }
 
 .btn-primary:hover {
   background: #f8fafc;
   transform: translateY(-2px);
+  color: black;
 }
 
 .btn-secondary {

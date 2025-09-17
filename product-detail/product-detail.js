@@ -49,11 +49,40 @@ function renderProductDetail() {
          return;
     }
 
+    // Xử lý hình ảnh sản phẩm
+    let productImages = [];
+    if (currentProduct.images && Array.isArray(currentProduct.images) && currentProduct.images.length > 0) {
+        productImages = currentProduct.images;
+    } else if (currentProduct.image) {
+        productImages = [currentProduct.image];
+    }
+    
+    // Giới hạn số lượng thumbnail tối đa là 5
+    const maxThumbnails = 5;
+    const mainImage = productImages[0] || 'https://placehold.co/600x400?text=No+Image';
+    const thumbnails = productImages.slice(0, maxThumbnails);
+
     // --- Cập nhật HTML để phù hợp với style.css và cấu trúc mới ---
     let html = `
         <div class="product-detail-content"> <!-- Wrapper mới cho layout -->
             <div class="product-detail-image">
-                <img src="../${currentProduct.image || 'https://placehold.co/600x400?text=No+Image'}" alt="${currentProduct.name}">
+                <img src="../${mainImage}" alt="${currentProduct.name}" class="main-image" id="main-product-image" onerror="this.src='https://placehold.co/600x400?text=Image+Not+Found'">
+                <div class="product-thumbnails">
+    `;
+    
+    // Tạo các thumbnail
+    if (thumbnails.length > 0) {
+        thumbnails.forEach((img, index) => {
+            html += `
+                <img src="../${img}" alt="${currentProduct.name} ${index+1}" class="thumbnail ${index === 0 ? 'active' : ''}" data-index="${index}" onerror="this.src='https://placehold.co/80x80?text=Error'">
+            `;
+        });
+    } else {
+        html += '<p>Không có hình ảnh</p>';
+    }
+    
+    html += `
+                </div>
             </div>
             <div class="product-detail-info">
                 <h1>${currentProduct.name}</h1>
@@ -91,6 +120,26 @@ function renderProductDetail() {
         </div>
     `;
     container.innerHTML = html;
+
+    // Xử lý sự kiện click thumbnail
+    const thumbnailElements = document.querySelectorAll('.thumbnail');
+    const mainImageElement = document.getElementById('main-product-image');
+    
+    if (thumbnailElements.length > 0 && mainImageElement) {
+        thumbnailElements.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                // Xóa class active của tất cả thumbnail
+                thumbnailElements.forEach(t => t.classList.remove('active'));
+                // Thêm class active cho thumbnail được click
+                this.classList.add('active');
+                // Thay đổi hình chính
+                const index = parseInt(this.dataset.index);
+                if (!isNaN(index) && productImages[index]) {
+                    mainImageElement.src = '../' + productImages[index];
+                }
+            });
+        });
+    }
 
     // Gắn sự kiện
     const unitSelect = document.getElementById('unit-select');
@@ -174,10 +223,8 @@ function addToCart() {
         alert(`Đã cập nhật số lượng. Giỏ hàng hiện có ${cart[existingItemIndex].quantity} ${selectedUnit.name} ${currentProduct.name}.`);
     } else {
         // Nếu chưa có, thêm mới
-        // --- ĐÃ THÊM ID DUY NHẤT CHO MỤC GIỎ HÀNG ---
         const cartItem = {
             // Tạo một ID duy nhất cho mục giỏ hàng này
-            // Date.now() có thể tạo ID trùng nếu click nhanh, nên kết hợp thêm Math.random()
             id: Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9),
             userId: currentUser.id, // Gán userId
             productId: currentProduct.id,
