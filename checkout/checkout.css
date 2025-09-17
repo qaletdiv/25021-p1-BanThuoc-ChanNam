@@ -1,17 +1,21 @@
 /* checkout/checkout.css */
 
 .checkout-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.checkout-left {
-  flex: 3;
+.left-column {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.checkout-right {
-  flex: 2;
+.right-column {
+  grid-column: 2 / 3;
 }
 
 .shipping-info, .payment-method, .order-summary {
@@ -19,7 +23,6 @@
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
 }
 
 h2 {
@@ -56,13 +59,36 @@ h2 {
 }
 
 .saved-addresses {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
 }
 
-.saved-addresses h3 {
-  font-size: 1.125rem;
+.saved-addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.saved-addresses-header h3 {
+  font-size: 1.125rem;
+  margin: 0;
   color: #1f2937;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #10b981;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.btn-text:hover {
+  text-decoration: underline;
 }
 
 .saved-address-item {
@@ -73,6 +99,7 @@ h2 {
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s;
+  position: relative;
 }
 
 .saved-address-item:hover {
@@ -87,6 +114,35 @@ h2 {
 .saved-address-item p {
   margin: 0.25rem 0;
   color: #4b5563;
+}
+
+.saved-address-item .address-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saved-address-item .address-actions button {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.saved-address-item .address-actions button:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.save-address {
+  margin-top: 1rem;
+  text-align: right;
 }
 
 .payment-options {
@@ -144,7 +200,7 @@ h2 {
 
 .checkout-items {
   margin-bottom: 1.5rem;
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -250,14 +306,65 @@ h2 {
   display: none;
 }
 
+/* Style cho thông báo */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: #1f2937;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .checkout-container {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
   
-  .checkout-left,
-  .checkout-right {
-    flex: 1;
+  .left-column, .right-column {
+    grid-column: 1 / 2;
+  }
+  
+  .saved-address-item .address-actions {
+    position: static;
+    margin-top: 0.75rem;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .shipping-info, .payment-method, .order-summary {
+    padding: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  .saved-addresses-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .checkout-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .checkout-item-image {
+    margin-bottom: 0.75rem;
   }
 }
