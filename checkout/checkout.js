@@ -312,9 +312,13 @@ function useSavedAddress(addressId) {
     }
 
     // Điền thông tin vào form
-    document.getElementById('fullname').value = address.fullname;
-    document.getElementById('phone').value = address.phone;
-    document.getElementById('address').value = address.address;
+    const fullnameInput = document.getElementById('fullname');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    
+    if (fullnameInput) fullnameInput.value = address.fullname;
+    if (phoneInput) phoneInput.value = address.phone;
+    if (addressInput) addressInput.value = address.address;
 
     // Hiển thị thông báo
     showNotification('Đã sử dụng địa chỉ đã lưu');
