@@ -1,5 +1,8 @@
 // checkout/checkout.js
 
+// Thêm biến toàn cục để theo dõi trạng thái
+let isUsingSavedAddress = false;
+
 /**
  * Khởi tạo ứng dụng khi trang load xong
  */
@@ -72,7 +75,10 @@ function renderCheckout() {
     renderSavedAddresses(currentUser.id);
     
     // Điền thông tin người dùng hiện tại vào form nếu có
-    prefillUserInfo(currentUser);
+    // Chỉ điền nếu người dùng không đang sử dụng địa chỉ đã lưu
+    if (!isUsingSavedAddress) {
+        prefillUserInfo(currentUser);
+    }
 }
 
 /**
@@ -80,14 +86,20 @@ function renderCheckout() {
  * @param {Object} user - Thông tin người dùng
  */
 function prefillUserInfo(user) {
+    // Nếu người dùng đang sử dụng địa chỉ đã lưu, không điền thông tin mặc định
+    if (isUsingSavedAddress) {
+        return;
+    }
+    
     const fullnameInput = document.getElementById('fullname');
     const phoneInput = document.getElementById('phone');
     
-    if (fullnameInput && user.name) {
+    // Chỉ điền nếu trường đang trống
+    if (fullnameInput && !fullnameInput.value && user.name) {
         fullnameInput.value = user.name;
     }
     
-    if (phoneInput && user.phone) {
+    if (phoneInput && !phoneInput.value && user.phone) {
         phoneInput.value = user.phone;
     }
 }
@@ -295,6 +307,9 @@ function useSavedAddress(addressId) {
         return;
     }
 
+    // Đặt cờ là true để ngăn việc điền thông tin mặc định
+    isUsingSavedAddress = true;
+
     // Lấy danh sách địa chỉ
     let addresses = [];
     try {
@@ -332,6 +347,11 @@ function useSavedAddress(addressId) {
     if (selectedAddressItem) {
         selectedAddressItem.classList.add('selected');
     }
+    
+    // Reset cờ sau một khoảng thời gian ngắn để đảm bảo thông tin không bị ghi đè
+    setTimeout(() => {
+        isUsingSavedAddress = false;
+    }, 100);
 }
 
 /**
