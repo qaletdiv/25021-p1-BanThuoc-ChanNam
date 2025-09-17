@@ -185,7 +185,7 @@ body {
 }
 
 .btn-primary:hover {
-  background: #f8fafc;
+  background: rgb(2,165,2);
   transform: translateY(-2px);
   color: black;
 }
@@ -536,9 +536,9 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .container {
-    max-width: 768px;
+    max-width: 1200px;
     padding: 0 15px;
   }
 

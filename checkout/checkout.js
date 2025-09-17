@@ -220,13 +220,15 @@ function renderSavedAddresses(userId) {
                 <p>${address.phone}</p>
                 <p>${address.address}</p>
                 <div class="address-actions">
-                    <button class="use-address-btn" data-address-id="${address.id}">Sử dụng</button>
-                    <button class="delete-address-btn" data-address-id="${address.id}">Xóa</button>
+                    <button type="button" class="use-address-btn" data-address-id="${address.id}">Sử dụng</button>
+                    <button type="button" class="delete-address-btn" data-address-id="${address.id}">Xóa</button>
                 </div>
             </div>
         `;
     });
     savedAddressesElement.innerHTML = addressesHTML;
+    // Đăng ký sự kiện cho các nút trong danh sách địa chỉ đã lưu
+    registerAddressEvents();
 }
 
 /**
@@ -277,22 +279,27 @@ function registerEventListeners() {
         saveAddressBtn.addEventListener('click', function() {
             saveCurrentAddress();
         });
+
     }
-    
+}
+
+function registerAddressEvents() {
     // Xử lý nút "Sử dụng" địa chỉ đã lưu
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('use-address-btn')) {
+    const useAddressBtns = document.querySelectorAll('.use-address-btn');
+    useAddressBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
             const addressId = e.target.dataset.addressId;
             useSavedAddress(addressId);
-        }
+        });
     });
-    
+
     // Xử lý nút "Xóa" địa chỉ đã lưu
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-address-btn')) {
+    const deleteAddressBtns = document.querySelectorAll('.delete-address-btn');
+    deleteAddressBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
             const addressId = e.target.dataset.addressId;
             deleteSavedAddress(addressId);
-        }
+        });
     });
 }
 
