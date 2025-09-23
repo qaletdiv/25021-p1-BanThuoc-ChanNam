@@ -1,4 +1,4 @@
-// account/account.js
+// account/my-account.js
 
 let currentUser = null;
 let addresses = [];
@@ -26,7 +26,6 @@ function checkLoginStatus() {
     try {
         const userJson = localStorage.getItem('currentUser');
         if (!userJson) {
-            // Chưa đăng nhập, chuyển hướng về trang đăng nhập
             window.location.href = '../login/login.html';
             return;
         }
@@ -58,28 +57,27 @@ function loadUserData() {
 // --- Tải địa chỉ ---
 function loadAddresses() {
     try {
-        addresses = JSON.parse(localStorage.getItem('addresses')) || [];
-        // Lọc địa chỉ của người dùng hiện tại
-        addresses = addresses.filter(addr => addr.userId === currentUser.id);
+        let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
+        addresses = allAddresses.filter(addr => addr.userId === currentUser.id);
         renderAddresses();
     } catch (e) {
         console.error("Lỗi khi tải địa chỉ:", e);
         addresses = [];
+        renderAddresses();
     }
 }
 
 // --- Tải đơn hàng ---
 function loadOrders() {
     try {
-        orders = JSON.parse(localStorage.getItem('orders')) || [];
-        // Lọc đơn hàng của người dùng hiện tại
-        orders = orders.filter(order => order.userId === currentUser.id);
-        // Sắp xếp theo ngày giảm dần
-        orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+        let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        orders = allOrders.filter(order => order.userId === currentUser.id);
+        orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         renderOrders();
     } catch (e) {
         console.error("Lỗi khi tải đơn hàng:", e);
         orders = [];
+        renderOrders();
     }
 }
 
@@ -103,7 +101,6 @@ function setupEventListeners() {
     document.getElementById('cancel-edit').addEventListener('click', function() {
         document.getElementById('personal-info-edit').style.display = 'none';
         document.getElementById('personal-info-view').style.display = 'block';
-        // Reset form
         loadUserData();
     });
     
@@ -129,20 +126,16 @@ function setupEventListeners() {
         saveAddress();
     });
     
-    // Đóng chi tiết đơn hàng
-    document.getElementById('close-order-detail').addEventListener('click', function() {
-        document.getElementById('order-detail-container').style.display = 'none';
-    });
-    
-    // Tải quận/huyện khi chọn tỉnh/thành
-    document.getElementById('province').addEventListener('change', function() {
-        loadDistricts(this.value);
-    });
-    
-    // Tải phường/xã khi chọn quận/huyện
-    document.getElementById('district').addEventListener('change', function() {
-        loadWards(this.value);
-    });
+    // Đăng xuất
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../login/login.html';
+            }
+        });
+    }
 }
 
 // --- Hiển thị tab ---
@@ -158,10 +151,16 @@ function showTab(tabId) {
     });
     
     // Hiển thị tab được chọn
-    document.getElementById(tabId).classList.add('active');
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
     
     // Active menu item tương ứng
-    document.querySelector(`.menu-item[data-tab="${tabId}"]`).classList.add('active');
+    const targetMenuItem = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
+    if (targetMenuItem) {
+        targetMenuItem.classList.add('active');
+    }
 }
 
 // --- Lưu thông tin cá nhân ---
@@ -175,13 +174,27 @@ function savePersonalInfo() {
         return;
     }
     
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Email không hợp lệ.');
+        return;
+    }
+    
+    // Validate phone
+    const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+    if (!phoneRegex.test(phone)) {
+        alert('Số điện thoại không hợp lệ.');
+        return;
+    }
+    
     // Cập nhật thông tin người dùng
     currentUser.name = name;
     currentUser.email = email;
     currentUser.phone = phone;
     
-    // Lưu vào localStorage
     try {
+        // Cập nhật currentUser trong localStorage
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
         // Cập nhật trong danh sách người dùng
@@ -192,10 +205,7 @@ function savePersonalInfo() {
             localStorage.setItem('users', JSON.stringify(users));
         }
         
-        // Hiển thị thông báo
         alert('Cập nhật thông tin thành công!');
-        
-        // Cập nhật hiển thị
         loadUserData();
         
         // Ẩn form, hiển thị thông tin
@@ -213,7 +223,7 @@ function renderAddresses() {
     if (!container) return;
     
     if (addresses.length === 0) {
-        container.innerHTML = '<p>Chưa có địa chỉ nào. Hãy thêm địa chỉ mới.</p>';
+        container.innerHTML = '<p class="no-data">Chưa có địa chỉ nào. Hãy thêm địa chỉ mới.</p>';
         return;
     }
     
@@ -226,19 +236,30 @@ function renderAddresses() {
                     ${address.isDefault ? '<span class="address-badge">Mặc định</span>' : ''}
                 </div>
                 <div class="address-card-body">
-                    <div>Địa chỉ: ${address.addressDetail}, ${address.ward}, ${address.district}, ${address.province}</div>
-                    <div>Điện thoại: ${address.recipientPhone}</div>
+                    <div><strong>Điện thoại:</strong> ${address.recipientPhone}</div>
+                    <div><strong>Địa chỉ:</strong> ${address.fullAddress}</div>
                 </div>
                 <div class="address-card-actions">
-                    <button onclick="editAddress('${address.id}')">Sửa</button>
-                    <button onclick="deleteAddress('${address.id}')">Xóa</button>
-                    ${!address.isDefault ? `<button onclick="setDefaultAddress('${address.id}')">Đặt làm mặc định</button>` : ''}
+                    <button class="btn-edit edit-address-btn" data-id="${address.id}">Sửa</button>
+                    <button class="btn-delete delete-address-btn" data-id="${address.id}">Xóa</button>
+                    ${!address.isDefault ? `<button class="btn-default set-default-address-btn" data-id="${address.id}">Đặt làm mặc định</button>` : ''}
                 </div>
             </div>
         `;
     });
     
     container.innerHTML = html;
+
+    // Gắn sự kiện sau khi render
+    container.querySelectorAll('.edit-address-btn').forEach(btn => {
+        btn.addEventListener('click', () => editAddress(btn.getAttribute('data-id')));
+    });
+    container.querySelectorAll('.delete-address-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteAddress(btn.getAttribute('data-id')));
+    });
+    container.querySelectorAll('.set-default-address-btn').forEach(btn => {
+        btn.addEventListener('click', () => setDefaultAddress(btn.getAttribute('data-id')));
+    });
 }
 
 // --- Hiển thị form địa chỉ ---
@@ -250,34 +271,23 @@ function showAddressForm(addressId = null) {
         // Chỉnh sửa địa chỉ
         formTitle.textContent = 'Chỉnh sửa địa chỉ';
         
-        // Tìm địa chỉ cần sửa
         const address = addresses.find(addr => addr.id === addressId);
-        if (!address) return;
+        if (!address) {
+            alert('Không tìm thấy địa chỉ để chỉnh sửa.');
+            return;
+        }
         
-        // Điền dữ liệu vào form
         document.getElementById('address-id').value = address.id;
         document.getElementById('recipient-name').value = address.recipientName;
         document.getElementById('recipient-phone').value = address.recipientPhone;
-        document.getElementById('province').value = address.province;
-        document.getElementById('district').value = address.district;
-        document.getElementById('ward').value = address.ward;
-        document.getElementById('address-detail').value = address.addressDetail;
+        document.getElementById('address-detail').value = address.fullAddress;
         document.getElementById('is-default').checked = address.isDefault;
         
-        // Tải lại quận/huyện và phường/xã
-        loadDistricts(address.province, address.district);
-        loadWards(address.district, address.ward);
     } else {
         // Thêm địa chỉ mới
         formTitle.textContent = 'Thêm địa chỉ mới';
-        
-        // Reset form
         document.getElementById('address-form').reset();
         document.getElementById('address-id').value = '';
-        
-        // Tải lại quận/huyện và phường/xã
-        loadDistricts('');
-        loadWards('');
     }
     
     formContainer.style.display = 'block';
@@ -293,14 +303,18 @@ function saveAddress() {
     const addressId = document.getElementById('address-id').value;
     const recipientName = document.getElementById('recipient-name').value.trim();
     const recipientPhone = document.getElementById('recipient-phone').value.trim();
-    const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
-    const ward = document.getElementById('ward').value;
-    const addressDetail = document.getElementById('address-detail').value.trim();
-    const isDefault = document.getElementById('is-default').checked;
+    const fullAddress = document.getElementById('address-detail').value.trim();
+    const isDefaultChecked = document.getElementById('is-default').checked;
     
-    if (!recipientName || !recipientPhone || !province || !district || !ward || !addressDetail) {
+    if (!recipientName || !recipientPhone || !fullAddress) {
         alert('Vui lòng điền đầy đủ thông tin địa chỉ.');
+        return;
+    }
+    
+    // Validate phone
+    const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+    if (!phoneRegex.test(recipientPhone)) {
+        alert('Số điện thoại không hợp lệ.');
         return;
     }
     
@@ -309,26 +323,27 @@ function saveAddress() {
         
         if (addressId) {
             // Cập nhật địa chỉ hiện có
-            const index = allAddresses.findIndex(addr => addr.id === addressId);
+            const index = allAddresses.findIndex(addr => addr.id === addressId && addr.userId === currentUser.id);
             if (index !== -1) {
                 allAddresses[index] = {
                     ...allAddresses[index],
                     recipientName,
                     recipientPhone,
-                    province,
-                    district,
-                    ward,
-                    addressDetail,
-                    isDefault
+                    fullAddress,
+                    isDefault: isDefaultChecked
                 };
                 
-                // Nếu đặt làm mặc định, cập nhật các địa chỉ khác
-                if (isDefault) {
-                    allAddresses = allAddresses.map(addr => ({
-                        ...addr,
-                        isDefault: addr.id === addressId
-                    }));
+                if (isDefaultChecked) {
+                    allAddresses = allAddresses.map(addr => {
+                        if (addr.userId === currentUser.id && addr.id !== addressId) {
+                            return { ...addr, isDefault: false };
+                        }
+                        return addr;
+                    });
                 }
+            } else {
+                alert('Không tìm thấy địa chỉ để cập nhật.');
+                return;
             }
         } else {
             // Thêm địa chỉ mới
@@ -337,34 +352,25 @@ function saveAddress() {
                 userId: currentUser.id,
                 recipientName,
                 recipientPhone,
-                province,
-                district,
-                ward,
-                addressDetail,
-                isDefault
+                fullAddress,
+                isDefault: isDefaultChecked
             };
             
-            // Nếu đặt làm mặc định, cập nhật các địa chỉ khác
-            if (isDefault) {
-                allAddresses = allAddresses.map(addr => ({
-                    ...addr,
-                    isDefault: false
-                }));
+            if (isDefaultChecked) {
+                allAddresses = allAddresses.map(addr => {
+                    if (addr.userId === currentUser.id) {
+                        return { ...addr, isDefault: false };
+                    }
+                    return addr;
+                });
             }
             
             allAddresses.push(newAddress);
         }
         
-        // Lưu vào localStorage
         localStorage.setItem('addresses', JSON.stringify(allAddresses));
-        
-        // Hiển thị thông báo
         alert(addressId ? 'Cập nhật địa chỉ thành công!' : 'Thêm địa chỉ thành công!');
-        
-        // Tải lại danh sách địa chỉ
         loadAddresses();
-        
-        // Ẩn form
         hideAddressForm();
     } catch (e) {
         console.error("Lỗi khi lưu địa chỉ:", e);
@@ -383,16 +389,9 @@ function deleteAddress(addressId) {
     
     try {
         let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
-        
-        // Lọc bỏ địa chỉ cần xóa
-        allAddresses = allAddresses.filter(addr => addr.id !== addressId);
-        
-        // Lưu vào localStorage
+        allAddresses = allAddresses.filter(addr => !(addr.id === addressId && addr.userId === currentUser.id));
         localStorage.setItem('addresses', JSON.stringify(allAddresses));
-        
-        // Tải lại danh sách địa chỉ
         loadAddresses();
-        
         alert('Xóa địa chỉ thành công!');
     } catch (e) {
         console.error("Lỗi khi xóa địa chỉ:", e);
@@ -404,84 +403,19 @@ function deleteAddress(addressId) {
 function setDefaultAddress(addressId) {
     try {
         let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
-        
-        // Cập nhật địa chỉ mặc định
-        allAddresses = allAddresses.map(addr => ({
-            ...addr,
-            isDefault: addr.id === addressId
-        }));
-        
-        // Lưu vào localStorage
+        allAddresses = allAddresses.map(addr => {
+            if (addr.userId === currentUser.id) {
+                return { ...addr, isDefault: addr.id === addressId };
+            }
+            return addr;
+        });
         localStorage.setItem('addresses', JSON.stringify(allAddresses));
-        
-        // Tải lại danh sách địa chỉ
         loadAddresses();
-        
         alert('Đặt địa chỉ mặc định thành công!');
     } catch (e) {
         console.error("Lỗi khi đặt địa chỉ mặc định:", e);
         alert('Có lỗi xảy ra, vui lòng thử lại sau.');
     }
-}
-
-// --- Tải quận/huyện ---
-function loadDistricts(province, selectedDistrict = '') {
-    const districtSelect = document.getElementById('district');
-    
-    // Xóa các option hiện tại
-    districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-    
-    if (!province) return;
-    
-    // Dữ liệu mẫu về quận/huyện
-    const districtsData = {
-        'hanoi': ['Ba Đình', 'Hoàn Kiếm', 'Hai Bà Trưng', 'Đống Đa', 'Cầu Giấy'],
-        'hcm': ['Quận 1', 'Quận 3', 'Quận 4', 'Quận 5', 'Quận 10'],
-        'danang': ['Hải Châu', 'Thanh Khê', 'Sơn Trà', 'Ngũ Hành Sơn', 'Liên Chiểu']
-    };
-    
-    const districts = districtsData[province] || [];
-    
-    districts.forEach(district => {
-        const option = document.createElement('option');
-        option.value = district;
-        option.textContent = district;
-        if (district === selectedDistrict) {
-            option.selected = true;
-        }
-        districtSelect.appendChild(option);
-    });
-}
-
-// --- Tải phường/xã ---
-function loadWards(district, selectedWard = '') {
-    const wardSelect = document.getElementById('ward');
-    
-    // Xóa các option hiện tại
-    wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-    
-    if (!district) return;
-    
-    // Dữ liệu mẫu về phường/xã
-    const wardsData = {
-        'Ba Đình': ['Phúc Xá', 'Trúc Bạch', 'Vĩnh Phúc', 'Cống Vị'],
-        'Hoàn Kiếm': ['Chương Dương Độ', 'Cửa Đông', 'Đồng Xuân', 'Hàng Bạc'],
-        'Quận 1': ['Bến Nghé', 'Bến Thành', 'Cầu Kho', 'Cầu Ông Lãnh'],
-        'Quận 3': ['Phường 1', 'Phường 2', 'Phường 3', 'Phường 4'],
-        'Hải Châu': ['Phước Ninh', 'Thuận Phước', 'Hòa Thuận Đông', 'Hòa Thuận Tây']
-    };
-    
-    const wards = wardsData[district] || [];
-    
-    wards.forEach(ward => {
-        const option = document.createElement('option');
-        option.value = ward;
-        option.textContent = ward;
-        if (ward === selectedWard) {
-            option.selected = true;
-        }
-        wardSelect.appendChild(option);
-    });
 }
 
 // --- Render đơn hàng ---
@@ -490,188 +424,228 @@ function renderOrders() {
     if (!container) return;
     
     if (orders.length === 0) {
-        container.innerHTML = '<p>Bạn chưa có đơn hàng nào.</p>';
+        container.innerHTML = '<p class="no-data">Bạn chưa có đơn hàng nào.</p>';
         return;
     }
     
     let html = '';
     orders.forEach(order => {
-        // Xác định lớp CSS cho trạng thái
-        let statusClass = '';
-        let statusText = '';
-        
-        switch (order.status) {
-            case 'pending':
-                statusClass = 'status-pending';
-                statusText = 'Chờ xác nhận';
-                break;
-            case 'processing':
-                statusClass = 'status-processing';
-                statusText = 'Đang xử lý';
-                break;
-            case 'shipping':
-                statusClass = 'status-processing';
-                statusText = 'Đang giao hàng';
-                break;
-            case 'delivered':
-                statusClass = 'status-delivered';
-                statusText = 'Đã giao';
-                break;
-            case 'cancelled':
-                statusClass = 'status-cancelled';
-                statusText = 'Đã hủy';
-                break;
-            default:
-                statusClass = 'status-pending';
-                statusText = 'Chờ xác nhận';
-        }
+        const statusInfo = getOrderStatusInfo(order.status);
         
         html += `
-            <div class="order-card" onclick="showOrderDetail('${order.id}')">
+            <div class="order-card" data-id="${order.id}">
                 <div class="order-card-header">
                     <div class="order-id">Mã đơn: #${order.id}</div>
-                    <div class="order-status ${statusClass}">${statusText}</div>
+                    <div class="order-status ${statusInfo.class}">${statusInfo.text}</div>
                 </div>
                 <div class="order-card-body">
-                    <div class="order-date">Ngày đặt: ${formatDate(order.orderDate)}</div>
-                    <div class="order-total">Tổng tiền: ${formatCurrency(order.totalAmount)}</div>
+                    <div class="order-date">Ngày đặt: ${formatDate(order.createdAt)}</div>
+                    <div class="order-total">Tổng tiền: ${formatCurrency(order.totalPrice)}</div>
+                </div>
+                <div class="order-card-footer">
+                    <button class="btn-view-order view-order-btn" data-id="${order.id}">Xem chi tiết</button>
                 </div>
             </div>
         `;
     });
     
     container.innerHTML = html;
+
+    // Gắn sự kiện click sau khi render
+    container.querySelectorAll('.view-order-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showOrderDetail(btn.getAttribute('data-id'));
+        });
+    });
+    
+    // Gắn sự kiện click cho toàn bộ card order
+    container.querySelectorAll('.order-card').forEach(card => {
+        card.addEventListener('click', () => {
+            showOrderDetail(card.getAttribute('data-id'));
+        });
+    });
 }
 
 // --- Hiển thị chi tiết đơn hàng ---
 function showOrderDetail(orderId) {
-    // Tìm đơn hàng
-    const order = orders.find(o => o.id === orderId);
-    if (!order) return;
-    
-    const container = document.getElementById('order-detail-container');
-    const content = document.getElementById('order-detail-content');
-    
-    // Xác định trạng thái
-    let statusText = '';
-    switch (order.status) {
-        case 'pending':
-            statusText = 'Chờ xác nhận';
-            break;
-        case 'processing':
-            statusText = 'Đang xử lý';
-            break;
-        case 'shipping':
-            statusText = 'Đang giao hàng';
-            break;
-        case 'delivered':
-            statusText = 'Đã giao';
-            break;
-        case 'cancelled':
-            statusText = 'Đã hủy';
-            break;
-        default:
-            statusText = 'Chờ xác nhận';
-    }
-    
-    // Render chi tiết đơn hàng
-    let html = `
-        <div class="order-detail-section">
-            <h4>Thông tin đơn hàng</h4>
-            <div class="order-info">
-                <p><strong>Mã đơn hàng:</strong> #${order.id}</p>
-                <p><strong>Ngày đặt:</strong> ${formatDate(order.orderDate)}</p>
-                <p><strong>Trạng thái:</strong> <span class="order-status ${getStatusClass(order.status)}">${statusText}</span></p>
-                ${order.shippingDate ? `<p><strong>Ngày giao hàng:</strong> ${formatDate(order.shippingDate)}</p>` : ''}
-            </div>
-        </div>
+    try {
+        const order = orders.find(o => o.id == orderId);
+        if (!order) {
+            alert('Không tìm thấy thông tin đơn hàng.');
+            return;
+        }
         
-        <div class="order-detail-section">
-            <h4>Địa chỉ giao hàng</h4>
-            <div class="shipping-address">
-                <p><strong>Người nhận:</strong> ${order.shippingAddress.recipientName}</p>
-                <p><strong>Điện thoại:</strong> ${order.shippingAddress.recipientPhone}</p>
-                <p><strong>Địa chỉ:</strong> ${order.shippingAddress.addressDetail}, ${order.shippingAddress.ward}, ${order.shippingAddress.district}, ${order.shippingAddress.province}</p>
-            </div>
-        </div>
+        const container = document.getElementById('order-detail-container');
+        const content = document.getElementById('order-detail-content');
         
-        <div class="order-detail-section">
-            <h4>Sản phẩm</h4>
-            <div class="order-items-list">
-    `;
-    
-    // Render các sản phẩm trong đơn hàng
-    order.items.forEach(item => {
-        html += `
-            <div class="order-item">
-                <img src="../${item.image}" alt="${item.productName}" class="order-item-image">
-                <div class="order-item-info">
-                    <div class="order-item-name">${item.productName}</div>
-                    <div class="order-item-details">${item.unit} - SL: ${item.quantity}</div>
+        if (!container || !content) {
+            console.error("Không tìm thấy phần tử modal chi tiết đơn hàng.");
+            return;
+        }
+
+        const statusInfo = getOrderStatusInfo(order.status);
+        
+        // Render chi tiết đơn hàng
+        let html = `
+            <div class="order-detail-header">
+                <h3>Chi tiết đơn hàng #${order.id}</h3>
+                <button id="close-order-detail" class="btn-close">&times;</button>
+            </div>
+            
+            <div class="order-detail-section">
+                <h4>Thông tin đơn hàng</h4>
+                <div class="order-info">
+                    <p><strong>Mã đơn hàng:</strong> #${order.id}</p>
+                    <p><strong>Ngày đặt:</strong> ${formatDate(order.createdAt)}</p>
+                    <p><strong>Trạng thái:</strong> <span class="order-status ${statusInfo.class}">${statusInfo.text}</span></p>
                 </div>
-                <div class="order-item-price">${formatCurrency(item.price * item.quantity)}</div>
             </div>
+            
+            <div class="order-detail-section">
+                <h4>Địa chỉ giao hàng</h4>
+                <div class="shipping-address">
+                    <p><strong>Người nhận:</strong> ${order.recipientName || 'N/A'}</p>
+                    <p><strong>Điện thoại:</strong> ${order.phone || 'N/A'}</p>
+                    <p><strong>Địa chỉ:</strong> ${order.address || 'N/A'}</p>
+                </div>
+            </div>
+            
+            <div class="order-detail-section">
+                <h4>Sản phẩm</h4>
+                <div class="order-items-list">
         `;
-    });
-    
-    html += `
-            </div>
-        </div>
         
-        <div class="order-detail-section">
-            <h4>Thanh toán</h4>
-            <div class="payment-summary">
-                <div class="order-summary">
-                    <span>Tạm tính:</span>
-                    <span>${formatCurrency(order.subtotal)}</span>
+        if (order.items && Array.isArray(order.items)) {
+            order.items.forEach(item => {
+                html += `
+                    <div class="order-item">
+                        <img src="../${item.image}}" alt="${item.productName}" class="order-item-image">
+                        <div class="order-item-info">
+                            <div class="order-item-name">${item.productName}</div>
+                            <div class="order-item-details">${item.unit || ''} - SL: ${item.quantity}</div>
+                        </div>
+                        <div class="order-item-price">${formatCurrency((item.price || 0) * (item.quantity || 0))}</div>
+                    </div>
+                `;
+            });
+        } else {
+            html += `<p class="no-data">Không có thông tin sản phẩm.</p>`;
+        }
+        
+        html += `
                 </div>
-                <div class="order-summary">
-                    <span>Phí vận chuyển:</span>
-                    <span>${formatCurrency(order.shippingFee)}</span>
-                </div>
-                ${order.discount > 0 ? `
+            </div>
+            
+            <div class="order-detail-section">
+                <h4>Thanh toán</h4>
+                <div class="payment-summary">
+                    <div class="order-summary">
+                        <span>Tạm tính:</span>
+                        <span>${formatCurrency(order.subtotal || 0)}</span>
+                    </div>
+                    <div class="order-summary">
+                        <span>Phí vận chuyển:</span>
+                        <span>${formatCurrency(order.shippingCost || 0)}</span>
+                    </div>
+        `;
+        
+        if (order.discount && order.discount > 0) {
+            html += `
                 <div class="order-summary">
                     <span>Giảm giá:</span>
                     <span>-${formatCurrency(order.discount)}</span>
                 </div>
-                ` : ''}
-                <div class="order-summary order-summary-total">
-                    <span>Tổng cộng:</span>
-                    <span>${formatCurrency(order.totalAmount)}</span>
-                </div>
-                <div class="order-summary">
-                    <span>Phương thức thanh toán:</span>
-                    <span>${order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : 'Chuyển khoản ngân hàng'}</span>
+            `;
+        }
+        
+        html += `
+                    <div class="order-summary order-summary-total">
+                        <span>Tổng cộng:</span>
+                        <span>${formatCurrency(order.totalPrice || 0)}</span>
+                    </div>
+                    <div class="order-summary">
+                        <span>Phương thức thanh toán:</span>
+                        <span>${order.paymentMethod === 'cod' ? 'Thanh toán khi nhận hàng' : 'Chuyển khoản ngân hàng'}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
-    
-    content.innerHTML = html;
-    container.style.display = 'flex';
+        `;
+        
+        content.innerHTML = html;
+        container.style.display = 'flex';
+
+        // Gắn sự kiện đóng modal
+        setupOrderDetailModalEvents(container);
+        
+    } catch (error) {
+        console.error('Lỗi khi hiển thị chi tiết đơn hàng:', error);
+        alert('Có lỗi xảy ra khi tải thông tin đơn hàng.');
+    }
 }
 
-// --- Lấy lớp CSS cho trạng thái ---
-function getStatusClass(status) {
+// --- Thiết lập sự kiện cho modal chi tiết đơn hàng ---
+function setupOrderDetailModalEvents(container) {
+    // Đóng khi click nút X
+    const closeBtn = document.getElementById('close-order-detail');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            container.style.display = 'none';
+        });
+    }
+
+    // Đóng khi click bên ngoài modal
+    container.addEventListener('click', function(e) {
+        if (e.target === container) {
+            container.style.display = 'none';
+        }
+    });
+
+    // Đóng khi nhấn phím ESC
+    const escapeHandler = function(e) {
+        if (e.key === 'Escape' && container.style.display === 'flex') {
+            container.style.display = 'none';
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+// --- Lấy thông tin trạng thái đơn hàng ---
+function getOrderStatusInfo(status) {
     switch (status) {
         case 'pending':
-            return 'status-pending';
+            return { class: 'status-pending', text: 'Chờ xác nhận' };
         case 'processing':
+            return { class: 'status-processing', text: 'Đang xử lý' };
         case 'shipping':
-            return 'status-processing';
+            return { class: 'status-shipping', text: 'Đang giao hàng' };
         case 'delivered':
-            return 'status-delivered';
+            return { class: 'status-delivered', text: 'Đã giao' };
         case 'cancelled':
-            return 'status-cancelled';
+            return { class: 'status-cancelled', text: 'Đã hủy' };
         default:
-            return 'status-pending';
+            return { class: 'status-pending', text: 'Chờ xác nhận' };
     }
 }
 
 // --- Định dạng ngày ---
 function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN');
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'N/A';
+        }
+        return date.toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    } catch (e) {
+        return 'N/A';
+    }
 }
 
 // --- Định dạng tiền tệ ---
@@ -679,5 +653,13 @@ function formatCurrency(amount) {
     if (typeof amount !== 'number' || isNaN(amount)) {
         return 'Liên hệ';
     }
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    return new Intl.NumberFormat('vi-VN', { 
+        style: 'currency', 
+        currency: 'VND' 
+    }).format(amount);
 }
+
+// --- Xử lý trước khi rời trang ---
+window.addEventListener('beforeunload', function() {
+    // Dọn dẹp các sự kiện nếu cần
+});
