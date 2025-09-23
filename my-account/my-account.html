@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tài khoản của tôi - PharmaHub</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="my-account.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="main-header">
+    <div class="container">
+       <!-- Nội dung bên trong header sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </header>
+
+ <main>
+    <div class="container">
+      <div class="account-page">
+        <h1 class="page-title">Tài khoản của tôi</h1>
+        
+        <div class="account-container">
+          <!-- Menu điều hướng -->
+          <nav class="account-sidebar">
+            <ul class="account-menu">
+              <li class="menu-item active" data-tab="personal-info">
+                <i class="icon-user"></i> Thông tin cá nhân
+              </li>
+              <li class="menu-item" data-tab="addresses">
+                <i class="icon-location"></i> Sổ địa chỉ
+              </li>
+              <li class="menu-item" data-tab="order-history">
+                <i class="icon-orders"></i> Lịch sử đặt hàng
+              </li>
+            </ul>
+          </nav>
+          
+          <!-- Nội dung chính -->
+          <div class="account-content">
+            <!-- Tab Thông tin cá nhân -->
+            <div id="personal-info" class="tab-content active">
+              <div class="section-header">
+                <h2>Thông tin cá nhân</h2>
+                <button id="edit-personal-info" class="btn btn-primary">Chỉnh sửa</button>
+              </div>
+              
+              <div class="info-view" id="personal-info-view">
+                <div class="info-group">
+                  <label>Họ và tên:</label>
+                  <span id="display-name">Nguyễn Văn A</span>
+                </div>
+                <div class="info-group">
+                  <label>Email:</label>
+                  <span id="display-email">nguyena@example.com</span>
+                </div>
+                <div class="info-group">
+                  <label>Số điện thoại:</label>
+                  <span id="display-phone">0912345678</span>
+                </div>
+              </div>
+              
+              <div class="info-edit" id="personal-info-edit" style="display: none;">
+                <form id="personal-info-form">
+                  <div class="form-group">
+                    <label for="name">Họ và tên:</label>
+                    <input type="text" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    <button type="button" id="cancel-edit" class="btn btn-secondary">Hủy</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            
+            <!-- Tab Sổ địa chỉ -->
+            <div id="addresses" class="tab-content">
+              <div class="section-header">
+                <h2>Sổ địa chỉ</h2>
+                <button id="add-address" class="btn btn-primary">Thêm địa chỉ mới</button>
+              </div>
+              
+              <div class="addresses-list" id="addresses-list">
+                <!-- Địa chỉ sẽ được render bằng JS -->
+              </div>
+              
+              <!-- Form thêm/sửa địa chỉ -->
+              <div class="address-form-container" id="address-form-container" style="display: none;">
+                <h3 id="address-form-title">Thêm địa chỉ mới</h3>
+                <form id="address-form">
+                  <input type="hidden" id="address-id">
+                  <div class="form-group">
+                    <label for="recipient-name">Họ và tên người nhận:</label>
+                    <input type="text" id="recipient-name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-phone">Số điện thoại:</label>
+                    <input type="tel" id="recipient-phone" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="address-detail">Địa chỉ chi tiết:</label>
+                    <input type="text" id="address-detail" placeholder="Số nhà, tên đường..." required>
+                  </div>
+                  <div class="form-group checkbox-group">
+                    <input type="checkbox" id="is-default">
+                    <label for="is-default">Đặt làm địa chỉ mặc định</label>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Lưu địa chỉ</button>
+                    <button type="button" id="cancel-address" class="btn btn-secondary">Hủy</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            
+            <!-- Tab Lịch sử đặt hàng -->
+            <div id="order-history" class="tab-content">
+              <div class="section-header">
+                <h2>Lịch sử đặt hàng</h2>
+              </div>
+              
+              <div class="orders-list" id="orders-list">
+                <!-- Đơn hàng sẽ được render bằng JS -->
+              </div>
+              
+              <!-- Chi tiết đơn hàng -->
+              <div class="order-detail-container" id="order-detail-container" style="display: none;">
+                <div class="order-detail-header">
+                  <h3>Chi tiết đơn hàng</h3>
+                  <button id="close-order-detail" class="btn-close">&times;</button>
+                </div>
+                <div class="order-detail-content" id="order-detail-content">
+                  <!-- Nội dung chi tiết đơn hàng sẽ được render bằng JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" id="main-footer">
+    <div class="container">
+      <!-- Nội dung bên trong footer sẽ được JS thay thế hoàn toàn -->
+    </div>
+  </footer>
+
+  <!-- Load dữ liệu mẫu trước -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/main.js"></script>
+  <!-- Script cho trang my-account -->
+  <script src="my-account.js"></script>
+</body>
+</html>
