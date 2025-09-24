@@ -459,7 +459,7 @@ function updatePageTitle() {
         pageTitleElement.textContent = 'Kết quả tìm kiếm';
         pageSubtitleElement.textContent = `Tìm thấy ${filteredProducts.length} sản phẩm cho từ khóa "${currentSearchQuery}"`;
     } else if (currentFilters.categories.length > 0) {
-        const categoryName = currentFilters.categories[0];
+        const categoryName = currentFilters.categories.join(", ");
         pageTitleElement.textContent = `Danh mục: ${categoryName}`;
         pageSubtitleElement.textContent = `Các sản phẩm thuộc danh mục ${categoryName}`;
     } else if (currentFilters.types.length > 0) {
