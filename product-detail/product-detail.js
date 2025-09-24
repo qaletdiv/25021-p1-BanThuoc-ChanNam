@@ -1,14 +1,10 @@
 // product-detail/product-detail.js
-
 let currentProduct = null;
 let selectedUnit = null;
 let selectedQuantity = 1;
 
 // --- Khởi tạo khi DOM load xong ---
 document.addEventListener('DOMContentLoaded', function () {
-    // loadData(); // Không cần gọi nữa nếu main.js đã gọi
-    // loadHeader(); // Không cần gọi nữa nếu main.js đã gọi
-    // loadFooter(); // Không cần gọi nữa nếu main.js đã gọi
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
     if (productId) {
@@ -56,20 +52,49 @@ function renderProductDetail() {
     } else if (currentProduct.image) {
         productImages = [currentProduct.image];
     }
-    
+
     // Giới hạn số lượng thumbnail tối đa là 5
     const maxThumbnails = 5;
     const mainImage = productImages[0] || 'https://placehold.co/600x400?text=No+Image';
     const thumbnails = productImages.slice(0, maxThumbnails);
 
-    // --- Cập nhật HTML để phù hợp với style.css và cấu trúc mới ---
+    // --- Tạo nội dung cho các tab ---
+    let tabsHTML = `
+        <div class="product-tabs">
+            <div class="tab-header">
+                <button class="tab-button active" data-tab="category">Danh mục</button>
+                <button class="tab-button" data-tab="description">Mô tả sản phẩm</button>
+                <button class="tab-button" data-tab="manufacturer">Nhà sản xuất</button>
+                <button class="tab-button" data-tab="ingredients">Thành phần</button>
+                <button class="tab-button" data-tab="usage">Công dụng</button>
+            </div>
+            <div class="tab-content">
+                <div id="category" class="tab-pane active">
+                    <p>${currentProduct.category || 'Không xác định'}</p>
+                </div>
+                <div id="description" class="tab-pane">
+                    <p>${currentProduct.description || 'Không có mô tả chi tiết cho sản phẩm này.'}</p>
+                </div>
+                <div id="manufacturer" class="tab-pane">
+                    <p>${currentProduct.manufacturer || 'Thông tin nhà sản xuất chưa được cung cấp.'}</p>
+                </div>
+                <div id="ingredients" class="tab-pane">
+                    <p>${currentProduct.ingredients || 'Thông tin thành phần chưa được cung cấp.'}</p>
+                </div>
+                <div id="usage" class="tab-pane">
+                    <p>${currentProduct.usage || 'Thông tin công dụng chưa được cung cấp.'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
     let html = `
         <div class="product-detail-content"> <!-- Wrapper mới cho layout -->
             <div class="product-detail-image">
                 <img src="../${mainImage}" alt="${currentProduct.name}" class="main-image" id="main-product-image" onerror="this.src='https://placehold.co/600x400?text=Image+Not+Found'">
                 <div class="product-thumbnails">
     `;
-    
+
     // Tạo các thumbnail
     if (thumbnails.length > 0) {
         thumbnails.forEach((img, index) => {
@@ -80,16 +105,16 @@ function renderProductDetail() {
     } else {
         html += '<p>Không có hình ảnh</p>';
     }
-    
+
     html += `
                 </div>
             </div>
             <div class="product-detail-info">
                 <h1>${currentProduct.name}</h1>
-                <p class="product-description">${currentProduct.description || 'Không có mô tả chi tiết cho sản phẩm này.'}</p>
-                <div class="product-meta">
-                    <p><strong>Danh mục:</strong> <span>${currentProduct.category || 'Không xác định'}</span></p>
-                    <!-- Có thể thêm thông tin khác như loại thuốc, nhà sản xuất nếu có -->
+                <!-- Di chuyển phần tabs lên đây -->
+                ${tabsHTML}
+                <div class="product-price-display">
+                    <span class="current-price" id="product-price">${formatCurrency(selectedUnit.price)}</span>
                 </div>
                 <div class="product-options">
                     <h3>Tùy chọn mua hàng</h3>
@@ -97,6 +122,7 @@ function renderProductDetail() {
                         <label for="unit-select">Chọn đơn vị:</label>
                         <select id="unit-select">
     `;
+
     if (currentProduct.units && currentProduct.units.length > 0) {
         currentProduct.units.forEach((unit, index) => {
             html += `<option value="${index}" ${index === 0 ? 'selected' : ''}>${unit.name} - ${formatCurrency(unit.price)}</option>`;
@@ -104,6 +130,7 @@ function renderProductDetail() {
     } else {
         html += `<option value="">Không có đơn vị</option>`;
     }
+
     html += `
                         </select>
                     </div>
@@ -113,18 +140,22 @@ function renderProductDetail() {
                     </div>
                     <button id="add-to-cart-btn" class="btn btn-primary">Thêm vào giỏ hàng</button>
                 </div>
-                 <div class="product-price-display">
-                    <span class="current-price" id="product-price">${formatCurrency(selectedUnit.price)}</span>
-                </div>
+                <!-- Di chuyển phần meta (danh mục) vào tabs -->
+                <!-- <div class="product-meta">
+                    <p><strong>Danh mục:</strong> <span>${currentProduct.category || 'Không xác định'}</span></p>
+                </div> -->
             </div>
         </div>
     `;
+
     container.innerHTML = html;
+
+    // --- Gắn sự kiện cho các tab ---
+    attachTabEventListeners();
 
     // Xử lý sự kiện click thumbnail
     const thumbnailElements = document.querySelectorAll('.thumbnail');
     const mainImageElement = document.getElementById('main-product-image');
-    
     if (thumbnailElements.length > 0 && mainImageElement) {
         thumbnailElements.forEach(thumb => {
             thumb.addEventListener('click', function() {
@@ -141,7 +172,7 @@ function renderProductDetail() {
         });
     }
 
-    // Gắn sự kiện
+    // Gắn sự kiện cho các thành phần khác
     const unitSelect = document.getElementById('unit-select');
     const quantityInput = document.getElementById('quantity-input');
     const addToCartBtn = document.getElementById('add-to-cart-btn');
@@ -155,7 +186,6 @@ function renderProductDetail() {
             }
         });
     }
-
     if (quantityInput) {
         quantityInput.addEventListener('change', function() {
             const qty = parseInt(this.value);
@@ -166,12 +196,31 @@ function renderProductDetail() {
             }
         });
     }
-
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', function() {
             addToCart();
         });
     }
+}
+
+// --- Hàm gắn sự kiện cho các tab ---
+function attachTabEventListeners() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+
+            // Xóa class 'active' khỏi tất cả nút và pane
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            // Thêm class 'active' cho nút được click và pane tương ứng
+            this.classList.add('active');
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
 }
 
 // --- Hàm thêm vào giỏ hàng ---
@@ -183,6 +232,7 @@ function addToCart() {
         window.location.href = '../login/login.html'; // Cập nhật đường dẫn
         return;
     }
+
     let currentUser;
     try {
          currentUser = JSON.parse(currentUserJson);

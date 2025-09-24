@@ -34,15 +34,11 @@ const mockProducts = [
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
     image: "images/products/med001.jpg",
-    images: [
-      "images/products/med001-1.jpg",
-      "images/products/med001-2.jfif",
-      "images/products/med001-3.jfif",
-      "images/products/med001-4.jfif",
-      "images/products/med001-5.jfif"
-    ],
+    manufacturer: "Công ty Dược phẩm ABC",
+    ingredients: "Paracetamol 500mg",
+    usage: "Giảm đau, hạ sốt.",
     description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
-    type: "khongkedon", // hoặc "kedon"
+    type: "khongkedon",
     units: [
       { name: "Vỉ 10 viên", price: 50000 },
       { name: "Hộp 10 vỉ", price: 480000 }
@@ -55,6 +51,9 @@ const mockProducts = [
     category: "Vitamin & Khoáng chất",
     categoryId: 2,
     image: "images/products/med002.jpg",
+    manufacturer: "Công ty TNHH Dinh Dưỡng XYZ",
+    ingredients: "Vitamin C (L-Ascorbic Acid) 1000mg",
+    usage: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     description: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     type: "khongkedon",
     units: [
@@ -69,6 +68,9 @@ const mockProducts = [
     category: "Hỗ trợ tiêu hóa",
     categoryId: 3,
     image: "images/products/med003.jpg",
+    manufacturer: "Công ty Cổ phần Dược phẩm Đại Bắc",
+    ingredients: "Lactobacillus acidophilus, Bifidobacterium bifidum, Enterococcus faecium, Bacillus subtilis.",
+    usage: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     description: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     type: "khongkedon",
     units: [
@@ -81,8 +83,11 @@ const mockProducts = [
     name: "Thuốc nhỏ mắt Tobrex",
     price: 65000,
     category: "Chăm sóc cá nhân",
-    categoryId: 4,
+    categoryId: 4, 
     image: "images/products/med004.jfif",
+    manufacturer: "GlaxoSmithKline",
+    ingredients: "Tobramycin 0.3% (3mg/g)",
+    usage: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     description: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     type: "kedon",
     units: [
@@ -96,6 +101,9 @@ const mockProducts = [
     category: "Thực phẩm chức năng",
     categoryId: 5,
     image: "images/products/med005.jfif",
+    manufacturer: "Công ty TNHH Một Thành Viên Dược Phẩm Omega",
+    ingredients: "Omega-3 (EPA và DHA) từ dầu cá.",
+    usage: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     description: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     type: "khongkedon",
     units: [
@@ -110,6 +118,9 @@ const mockProducts = [
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
     image: "images/products/med006.jfif",
+    manufacturer: "Công ty Cổ phần Dược phẩm Yên Bái",
+    ingredients: "Vỏ rễ cây rẻ quạt, lá thường sơn, lá tía tô, gừng, đường phèn, chất bảo quản (E211).",
+    usage: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     description: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     type: "khongkedon",
     units: [
@@ -124,8 +135,11 @@ const mockProducts = [
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
     image: "images/products/med001.jpg",
+    manufacturer: "Công ty Dược phẩm ABC",
+    ingredients: "Paracetamol 500mg",
+    usage: "Giảm đau, hạ sốt.",
     description: "Thuốc giảm đau, hạ sốt hiệu quả. Mỗi viên nén chứa 500mg Paracetamol.",
-    type: "khongkedon", // hoặc "kedon"
+    type: "khongkedon",
     units: [
       { name: "Vỉ 10 viên", price: 50000 },
       { name: "Hộp 10 vỉ", price: 480000 }
@@ -138,6 +152,9 @@ const mockProducts = [
     category: "Vitamin & Khoáng chất",
     categoryId: 2,
     image: "images/products/med002.jpg",
+    manufacturer: "Công ty TNHH Dinh Dưỡng XYZ",
+    ingredients: "Vitamin C (L-Ascorbic Acid) 1000mg",
+    usage: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     description: "Tăng cường sức đề kháng, chống oxy hóa, hỗ trợ làm đẹp da.",
     type: "khongkedon",
     units: [
@@ -147,11 +164,14 @@ const mockProducts = [
   },
   {
     id: 9,
-    name: "Men vi sinh Đại Bắc (Probiotics)",
+    name: "Men vi sinh Đại Bắc (Probiotics) (Lặp lại)",
     price: 85000,
     category: "Hỗ trợ tiêu hóa",
     categoryId: 3,
     image: "images/products/med003.jpg",
+    manufacturer: "Công ty Cổ phần Dược phẩm Đại Bắc",
+    ingredients: "Lactobacillus acidophilus, Bifidobacterium bifidum, Enterococcus faecium, Bacillus subtilis.",
+    usage: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     description: "Hỗ trợ tiêu hóa, cải thiện hệ vi sinh đường ruột, giảm đầy bụng khó tiêu.",
     type: "khongkedon",
     units: [
@@ -161,11 +181,14 @@ const mockProducts = [
   },
   {
     id: 10,
-    name: "Thuốc nhỏ mắt Tobrex",
+    name: "Thuốc nhỏ mắt Tobrex (Lặp lại)",
     price: 65000,
     category: "Chăm sóc cá nhân",
     categoryId: 4,
     image: "images/products/med004.jfif",
+    manufacturer: "GlaxoSmithKline",
+    ingredients: "Tobramycin 0.3% (3mg/g)",
+    usage: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     description: "Điều trị các bệnh về mắt do vi khuẩn gây ra như viêm kết mạc, loét giác mạc.",
     type: "kedon",
     units: [
@@ -179,6 +202,9 @@ const mockProducts = [
     category: "Thực phẩm chức năng",
     categoryId: 5,
     image: "images/products/med005.jfif",
+    manufacturer: "Công ty TNHH Một Thành Viên Dược Phẩm Omega",
+    ingredients: "Omega-3 (EPA và DHA) từ dầu cá.",
+    usage: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     description: "Hỗ trợ tim mạch, não bộ và thị lực. Giàu EPA và DHA.",
     type: "khongkedon",
     units: [
@@ -193,6 +219,9 @@ const mockProducts = [
     category: "Thuốc cảm cúm & Sốt",
     categoryId: 1,
     image: "images/products/med006.jfif",
+    manufacturer: "Công ty Cổ phần Dược phẩm Yên Bái",
+    ingredients: "Vỏ rễ cây rẻ quạt, lá thường sơn, lá tía tô, gừng, đường phèn, chất bảo quản (E211).",
+    usage: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     description: "Giúp long đờm, giảm ho, thanh nhiệt, giải độc.",
     type: "khongkedon",
     units: [

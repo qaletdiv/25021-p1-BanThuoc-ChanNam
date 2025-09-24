@@ -141,3 +141,44 @@
      max-width: 100%; 
   }
 }
+
+.product-tabs {
+  margin-top: 2rem;
+}
+
+.tab-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-button:hover {
+  color: #1e40af;
+}
+
+.tab-button.active {
+  color: #1e40af;
+  border-bottom: 2px solid #1e40af;
+}
+
+.tab-content {
+  padding-top: 1rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
