@@ -117,6 +117,10 @@ body {
   gap: 5px; 
 }
 
+.cart-count:empty {
+  display: none;
+}
+
 .cart-count {
   background: #ef4444;
   color: white;
