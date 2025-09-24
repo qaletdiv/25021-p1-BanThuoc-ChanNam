@@ -3,6 +3,8 @@
 let currentUser = null;
 let addresses = [];
 let orders = [];
+let currentPage = 1;
+const ordersPerPage = 5;
 
 // --- Khởi tạo khi DOM load xong ---
 document.addEventListener('DOMContentLoaded', function() {
@@ -154,6 +156,12 @@ function showTab(tabId) {
     const targetTab = document.getElementById(tabId);
     if (targetTab) {
         targetTab.classList.add('active');
+        
+        // Reset về trang 1 khi chuyển tab đơn hàng
+        if (tabId === 'orders') {
+            currentPage = 1;
+            renderOrders();
+        }
     }
     
     // Active menu item tương ứng
@@ -418,18 +426,30 @@ function setDefaultAddress(addressId) {
     }
 }
 
-// --- Render đơn hàng ---
+// --- Render đơn hàng với phân trang ---
 function renderOrders() {
     const container = document.getElementById('orders-list');
+    const paginationContainer = document.getElementById('orders-pagination');
+    
     if (!container) return;
     
     if (orders.length === 0) {
         container.innerHTML = '<p class="no-data">Bạn chưa có đơn hàng nào.</p>';
+        if (paginationContainer) {
+            paginationContainer.innerHTML = '';
+        }
         return;
     }
     
+    // Tính toán phân trang
+    const totalPages = Math.ceil(orders.length / ordersPerPage);
+    const startIndex = (currentPage - 1) * ordersPerPage;
+    const endIndex = Math.min(startIndex + ordersPerPage, orders.length);
+    const currentOrders = orders.slice(startIndex, endIndex);
+    
+    // Render danh sách đơn hàng
     let html = '';
-    orders.forEach(order => {
+    currentOrders.forEach(order => {
         const statusInfo = getOrderStatusInfo(order.status);
         
         html += `
@@ -451,6 +471,9 @@ function renderOrders() {
     
     container.innerHTML = html;
 
+    // Render phân trang
+    renderPagination(totalPages, paginationContainer);
+    
     // Gắn sự kiện click sau khi render
     container.querySelectorAll('.view-order-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -463,6 +486,91 @@ function renderOrders() {
     container.querySelectorAll('.order-card').forEach(card => {
         card.addEventListener('click', () => {
             showOrderDetail(card.getAttribute('data-id'));
+        });
+    });
+}
+
+// --- Render phân trang ---
+function renderPagination(totalPages, container) {
+    if (!container || totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    let html = `
+        <div class="pagination-info">
+            Hiển thị ${Math.min((currentPage - 1) * ordersPerPage + 1, orders.length)}-${Math.min(currentPage * ordersPerPage, orders.length)} của ${orders.length} đơn hàng
+        </div>
+        <div class="pagination-controls">
+    `;
+    
+    // Nút Previous
+    if (currentPage > 1) {
+        html += `<button class="pagination-btn prev-btn" data-page="${currentPage - 1}">‹</button>`;
+    } else {
+        html += `<button class="pagination-btn prev-btn disabled" disabled>‹</button>`;
+    }
+    
+    // Các nút trang
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // Điều chỉnh nếu không đủ maxVisiblePages
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // Nút trang đầu
+    if (startPage > 1) {
+        html += `<button class="pagination-btn" data-page="1">1</button>`;
+        if (startPage > 2) {
+            html += `<span class="pagination-ellipsis">...</span>`;
+        }
+    }
+    
+    // Các trang
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            html += `<button class="pagination-btn active" data-page="${i}">${i}</button>`;
+        } else {
+            html += `<button class="pagination-btn" data-page="${i}">${i}</button>`;
+        }
+    }
+    
+    // Nút trang cuối
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span class="pagination-ellipsis">...</span>`;
+        }
+        html += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+    }
+    
+    // Nút Next
+    if (currentPage < totalPages) {
+        html += `<button class="pagination-btn next-btn" data-page="${currentPage + 1}">›</button>`;
+    } else {
+        html += `<button class="pagination-btn next-btn disabled" disabled>›</button>`;
+    }
+    
+    html += `</div>`;
+    
+    container.innerHTML = html;
+    
+    // Gắn sự kiện cho các nút phân trang
+    container.querySelectorAll('.pagination-btn:not(.disabled)').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const page = parseInt(this.getAttribute('data-page'));
+            if (page && page !== currentPage) {
+                currentPage = page;
+                renderOrders();
+                
+                // Cuộn lên đầu danh sách đơn hàng
+                const ordersContainer = document.getElementById('orders-list');
+                if (ordersContainer) {
+                    ordersContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
         });
     });
 }

@@ -262,18 +262,52 @@ const mockUsers = [
 // Địa chỉ mẫu cho người dùng
 const mockAddresses = [
   {
-    id: 1,
+    id: "1",
     userId: 1,
-    receiver: "Nguyễn Văn A",
-    phone: "0901234567",
-    address: "123 Đường ABC, Quận 1, TP. HCM"
+    recipientName: "Nguyễn Văn A",
+    recipientPhone: "0901234567",
+    fullAddress: "123 Đường ABC, Phường XYZ, Quận 1, TP. HCM",
+    isDefault: true
   },
   {
-    id: 2,
+    id: "2",
+    userId: 1,
+    recipientName: "Nguyễn Thị B",
+    recipientPhone: "0912345678",
+    fullAddress: "456 Đường DEF, Phường UVW, Quận 2, TP. HCM",
+    isDefault: false
+  },
+  {
+    id: "3",
+    userId: 1,
+    recipientName: "Công ty ABC",
+    recipientPhone: "0283822888",
+    fullAddress: "789 Đường GHI, Lầu 5, Phường KLM, Quận 3, TP. HCM",
+    isDefault: false
+  },
+  {
+    id: "4",
     userId: 2,
-    receiver: "Trần Thị B",
-    phone: "0912345678",
-    address: "456 Đường XYZ, Quận 2, TP. HCM"
+    recipientName: "Trần Thị B",
+    recipientPhone: "0912345678",
+    fullAddress: "456 Đường XYZ, Phường OPQ, Quận 2, TP. HCM",
+    isDefault: true
+  },
+  {
+    id: "5",
+    userId: 2,
+    recipientName: "Trần Văn C",
+    recipientPhone: "0933445566",
+    fullAddress: "321 Đường JKL, Phường RST, Quận 5, TP. HCM",
+    isDefault: false
+  },
+  {
+    id: "6",
+    userId: 3,
+    recipientName: "Lê Văn D",
+    recipientPhone: "0977888999",
+    fullAddress: "654 Đường MNO, Phường UVW, Quận 10, TP. HCM",
+    isDefault: true
   }
 ];
 
@@ -289,7 +323,7 @@ const mockOrders = [
         unit: "Vỉ 10 viên", 
         quantity: 2, 
         price: 50000,
-        image: "images/products/panadol-extra.jpg"
+        image: "images/products/med007.jpg"
       },
       { 
         productId: 2, 
@@ -297,7 +331,7 @@ const mockOrders = [
         unit: "Chai 30 viên", 
         quantity: 1, 
         price: 120000,
-        image: "images/products/vitamin-c.jpg"
+        image: "images/products/med002.jpg"
       }
     ],
     subtotal: 220000,
@@ -321,7 +355,7 @@ const mockOrders = [
         unit: "Hộp 60 viên", 
         quantity: 1, 
         price: 180000,
-        image: "images/products/calcium.jpg"
+        image: "images/products/med003.jpg"
       },
       { 
         productId: 4, 
@@ -329,7 +363,7 @@ const mockOrders = [
         unit: "Lọ 100 viên", 
         quantity: 1, 
         price: 250000,
-        image: "images/products/omega3.jpg"
+        image: "images/products/med004.jfif"
       }
     ],
     subtotal: 430000,
@@ -353,7 +387,7 @@ const mockOrders = [
         unit: "Chai 100ml", 
         quantity: 1, 
         price: 95000,
-        image: "images/products/prospan.jpg"
+        image: "images/products/med005.jfif"
       }
     ],
     subtotal: 95000,
@@ -377,7 +411,7 @@ const mockOrders = [
         unit: "Vỉ 10 viên", 
         quantity: 3, 
         price: 50000,
-        image: "images/products/panadol-extra.jpg"
+        image: "images/products/med007.jpg"
       }
     ],
     subtotal: 150000,
@@ -401,7 +435,7 @@ const mockOrders = [
         unit: "Hộp 20 gói", 
         quantity: 2, 
         price: 80000,
-        image: "images/products/men-tieu-hoa.jpg"
+        image: "images/products/med010.jpg"
       },
       { 
         productId: 7, 
@@ -409,7 +443,7 @@ const mockOrders = [
         unit: "Chai 10ml", 
         quantity: 1, 
         price: 35000,
-        image: "images/products/dau-go.jpg"
+        image: "images/products/med011.png"
       }
     ],
     subtotal: 195000,
