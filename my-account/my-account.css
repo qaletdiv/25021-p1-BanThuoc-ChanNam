@@ -323,6 +323,11 @@
   color: #1e40af;
 }
 
+.status-shipping {
+  background-color: #b46a24;
+  color: white;
+}
+
 .status-delivered {
   background-color: #d1fae5;
   color: #065f46;
