@@ -520,7 +520,7 @@ function showOrderDetail(orderId) {
             order.items.forEach(item => {
                 html += `
                     <div class="order-item">
-                        <img src="../${item.image}}" alt="${item.productName}" class="order-item-image">
+                        <img src="../${item.image}" alt="${item.productName}" class="order-item-image">
                         <div class="order-item-info">
                             <div class="order-item-name">${item.productName}</div>
                             <div class="order-item-details">${item.unit || ''} - SL: ${item.quantity}</div>

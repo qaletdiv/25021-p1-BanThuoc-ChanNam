@@ -111,7 +111,6 @@ function renderProductDetail() {
             </div>
             <div class="product-detail-info">
                 <h1>${currentProduct.name}</h1>
-                <!-- Di chuyển phần tabs lên đây -->
                 ${tabsHTML}
                 <div class="product-price-display">
                     <span class="current-price" id="product-price">${formatCurrency(selectedUnit.price)}</span>

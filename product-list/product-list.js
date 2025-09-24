@@ -200,7 +200,7 @@ function renderProductList(products) {
                ${badgeHTML} <!-- Chèn badge nếu có -->
                <img src="../${product.image}" alt="${product.name}">
                <h3>${product.name}</h3>
-               <p>${product.description}</p>
+               <p class="multiline-ellipsis">${product.description}</p>
                <div class="price">
                    <span class="current-price">${priceDisplay}</span>
                    ${originalPriceDisplay} <!-- Hiển thị giá cũ nếu có -->

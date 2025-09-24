@@ -186,6 +186,11 @@
   align-items: center;
 }
 
+#is-default {
+  width: auto;
+  align-items: flex-start;
+}
+
 .checkbox-group input {
   margin-right: 8px;
 }
@@ -256,6 +261,22 @@
 }
 
 /* Order History Styles */
+
+.btn-view-order{
+  background-color: lightgreen;
+  font-family: Arial, Helvetica, sans-serif;
+  width: auto;
+  height: 30px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
 .orders-list {
   margin-bottom: 30px;
 }
@@ -267,6 +288,7 @@
   margin-bottom: 15px;
   cursor: pointer;
   transition: all 0.2s;
+  height: 130px;
 }
 
 .order-card:hover {
