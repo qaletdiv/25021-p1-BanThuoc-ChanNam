@@ -320,6 +320,8 @@ body {
 .multiline-ellipsis {
   display: -webkit-box;        /* Bắt buộc cho webkit */
   -webkit-line-clamp: 2;       /* Số dòng tối đa muốn hiển thị */
+  display: box;               /* Legacy standard */
+  line-clamp: 2;              /* Số dòng tối đa - Standard property */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

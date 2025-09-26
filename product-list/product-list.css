@@ -365,6 +365,8 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  display: box;               /* Legacy standard */
+  line-clamp: 2;              /* Số dòng tối đa - Standard property */
   overflow: hidden;
 }
 
