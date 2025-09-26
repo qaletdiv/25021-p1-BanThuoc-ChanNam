@@ -5,9 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Danh sách sản phẩm - PharmaHub</title>
-  <!-- Liên kết tới style.css chính -->
   <link rel="stylesheet" href="../css/style.css">
-  <!-- Liên kết tới CSS riêng của trang product-list -->
   <link rel="stylesheet" href="product-list.css">
 </head>
 <body>
@@ -18,31 +16,57 @@
     </div>
   </header>
 
-<main>
+  <main>
     <div class="container">
+      <!-- Tiêu đề trang -->
       <h1 id="page-title">Danh sách sản phẩm</h1>
       <p id="page-subtitle">Tất cả sản phẩm</p>
-      <br>
-      <!-- Thêm phần hiển thị kết quả tìm kiếm
-      <div id="" class="search-result-info" style="display: none;">
-        <p>Đang hiển thị kết quả tìm kiếm cho: <strong id="search-keyword"></strong></p>
-        <button id="clear-search" class="btn btn-link">Xóa tìm kiếm</button>
-      </div> -->
       
+      <!-- Thông báo kết quả tìm kiếm -->
+      <div id="search-result-info" class="search-result-info">
+        <div class="search-info-content">
+          <p>Đang hiển thị kết quả tìm kiếm cho: <strong id="search-keyword"></strong></p>
+          <button id="clear-search" class="btn btn-outline">Xóa tìm kiếm</button>
+        </div>
+      </div>
+
+      <!-- Filter đang hoạt động -->
+      <div id="active-filters" class="active-filters">
+        <div class="active-filters-header">
+          <strong>Bộ lọc đang áp dụng:</strong>
+          <button id="clear-all-filters" class="btn btn-link">Xóa tất cả</button>
+        </div>
+        <div id="filter-tags" class="filter-tags"></div>
+      </div>
+
       <div class="content-wrapper">
         <!-- Sidebar lọc -->
         <aside class="filter-sidebar">
-          <h3>Bộ lọc</h3>
-          <div id="filter-section">
-            <!-- Các bộ lọc sẽ được render ở đây -->
+          <div class="filter-header">
+            <h3>Bộ lọc</h3>
+            <button id="toggle-filters" class="btn btn-icon" aria-label="Ẩn/hiện bộ lọc">
+              <span class="icon">▼</span>
+            </button>
           </div>
-          <button id="apply-filters" class="btn btn-primary">Áp dụng bộ lọc</button>
-          <button id="clear-filters" class="btn btn-secondary">Xóa bộ lọc</button>
+          
+          <div id="filter-content" class="filter-content">
+            <div id="filter-section">
+              <!-- Các bộ lọc sẽ được render ở đây -->
+            </div>
+            <div class="filter-actions">
+              <button id="apply-filters" class="btn btn-primary">Áp dụng bộ lọc</button>
+              <button id="clear-filters" class="btn btn-secondary">Xóa bộ lọc</button>
+            </div>
+          </div>
         </aside>
+
         <!-- Nội dung chính -->
         <div class="main-content">
-          <!-- Thanh công cụ (sắp xếp) -->
+          <!-- Thanh công cụ -->
           <div class="toolbar">
+            <div class="results-count">
+              <span id="results-count">0</span> sản phẩm
+            </div>
             <div class="sort-section">
               <label for="sort-select">Sắp xếp theo:</label>
               <select id="sort-select">
@@ -54,11 +78,27 @@
               </select>
             </div>
           </div>
+
           <!-- Danh sách sản phẩm -->
           <div id="product-list-container">
             <div id="product-grid" class="product-grid">
               <!-- Sản phẩm sẽ được render ở đây -->
             </div>
+
+            <!-- Loading indicator -->
+            <div id="loading-indicator" class="loading-indicator">
+              <div class="spinner"></div>
+              <p>Đang tải sản phẩm...</p>
+            </div>
+
+            <!-- Empty state -->
+            <div id="empty-state" class="empty-state">
+              <div class="empty-icon">📦</div>
+              <h3>Không tìm thấy sản phẩm nào</h3>
+              <p>Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm</p>
+              <button id="reset-all" class="btn btn-primary">Xóa tất cả bộ lọc</button>
+            </div>
+
             <!-- Phân trang -->
             <div id="pagination" class="pagination">
               <!-- Phân trang sẽ được render ở đây -->
@@ -76,12 +116,9 @@
     </div>
   </footer>
 
-  <!-- Load dữ liệu mẫu trước -->
+  <!-- Load dữ liệu -->
   <script src="../js/mock-data.js"></script>
-  <!-- Script chính chứa loadHeader, loadFooter -->
-  <!-- Đảm bảo main.js được load sau mock-data.js -->
   <script src="../js/main.js"></script>
-  <!-- Script cho trang product-list -->
   <script src="product-list.js"></script>
 </body>
 </html>
