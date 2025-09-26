@@ -90,25 +90,47 @@ function loadHeader() {
     // --- Cập nhật HTML nội dung header để phù hợp với style.css ---
     header.innerHTML = `
         <div class="container">
-          <div class="header-content">
+        <div class="header-content">
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+            ☰
+            </button>
             <div class="logo">
-              <a href="${basePath}index.html" style="text-decoration: none; color: inherit;"><span>PharmaHub</span></a>
+            <a href="${basePath}index.html" style="text-decoration: none; color: inherit;"><span>PharmaHub</span></a>
             </div>
             <div class="search-bar">
-              <input type="text" id="search-input" placeholder="Tìm kiếm tên thuốc...">
-              <button id="search-btn" type="submit" title="Tìm kiếm">
+            <input type="text" id="search-input" placeholder="Tìm kiếm tên thuốc...">
+            <button id="search-btn" type="submit" title="Tìm kiếm">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                  <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
                 </svg>
-              </button>
+            </button>
             </div>
-            <nav class="nav-menu">
-              ${navLinks}
+            <nav class="nav-menu" id="nav-menu">
+            ${navLinks}
             </nav>
-          </div>
+        </div>
         </div>
     `;
+
+    // Thêm sự kiện cho hamburger menu
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            this.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Đóng menu khi click ra ngoài
+        document.addEventListener('click', function(event) {
+            if (!navMenu.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.textContent = '☰';
+            }
+        });
+    }
 
     // Gắn sự kiện cho nút đăng xuất nếu có
     if (currentUserJson) {
@@ -271,13 +293,12 @@ function renderFeaturedProducts() {
         // --- Sử dụng basePath cho liên kết chi tiết sản phẩm ---
         productHTML += `
             <div class="product-card">
-                ${badgeHTML} <!-- Chèn badge nếu có -->
-                <img src="${product.image}" alt="${product.name}">
+                ${badgeHTML}
+                <img src="${product.image}" alt="${product.name}" onerror="this.src='../images/placeholder-product.jpg'">
                 <h3>${product.name}</h3>
-                <p>${product.description}</p>
+                <p class="multiline-ellipsis">${product.description || 'Không có mô tả'}</p>
                 <div class="price">
                     <span class="current-price">${priceDisplay}</span>
-                    <!-- Hiển thị giá cũ nếu có -->
                     ${product.originalPrice ? `<span class="old-price">${formatCurrency(product.originalPrice)}</span>` : ''}
                 </div>
                 <a href="${basePath}product-detail/product-detail.html?id=${product.id}" class="btn btn-primary">Xem chi tiết</a>
