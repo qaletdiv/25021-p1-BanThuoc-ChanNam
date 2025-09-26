@@ -1,25 +1,19 @@
-// account/my-account.js
+// my-account/my-account.js
 
 let currentUser = null;
 let addresses = [];
 let orders = [];
 let currentPage = 1;
 const ordersPerPage = 5;
+let editingAddressId = null;
 
 // --- Khởi tạo khi DOM load xong ---
 document.addEventListener('DOMContentLoaded', function() {
-    // Kiểm tra đăng nhập
     checkLoginStatus();
-    
-    // Tải dữ liệu
     loadUserData();
     loadAddresses();
     loadOrders();
-    
-    // Thiết lập sự kiện
     setupEventListeners();
-    
-    // Hiển thị tab mặc định
     showTab('personal-info');
 });
 
@@ -45,12 +39,10 @@ function checkLoginStatus() {
 function loadUserData() {
     if (!currentUser) return;
     
-    // Hiển thị thông tin người dùng
     document.getElementById('display-name').textContent = currentUser.name || '';
     document.getElementById('display-email').textContent = currentUser.email || '';
     document.getElementById('display-phone').textContent = currentUser.phone || '';
     
-    // Điền dữ liệu vào form chỉnh sửa
     document.getElementById('name').value = currentUser.name || '';
     document.getElementById('email').value = currentUser.email || '';
     document.getElementById('phone').value = currentUser.phone || '';
@@ -93,78 +85,74 @@ function setupEventListeners() {
         });
     });
     
-    // Chỉnh sửa thông tin cá nhân
+    // Thông tin cá nhân
     document.getElementById('edit-personal-info').addEventListener('click', function() {
         document.getElementById('personal-info-view').style.display = 'none';
         document.getElementById('personal-info-edit').style.display = 'block';
     });
     
-    // Hủy chỉnh sửa thông tin cá nhân
     document.getElementById('cancel-edit').addEventListener('click', function() {
         document.getElementById('personal-info-edit').style.display = 'none';
         document.getElementById('personal-info-view').style.display = 'block';
         loadUserData();
     });
     
-    // Lưu thông tin cá nhân
     document.getElementById('personal-info-form').addEventListener('submit', function(e) {
         e.preventDefault();
         savePersonalInfo();
     });
     
-    // Thêm địa chỉ mới
+    // Popup địa chỉ
     document.getElementById('add-address').addEventListener('click', function() {
-        showAddressForm();
+        showAddressPopup();
     });
     
-    // Hủy thêm/sửa địa chỉ
-    document.getElementById('cancel-address').addEventListener('click', function() {
-        hideAddressForm();
+    document.getElementById('address-popup-close').addEventListener('click', function() {
+        hideAddressPopup();
     });
     
-    // Lưu địa chỉ
-    document.getElementById('address-form').addEventListener('submit', function(e) {
+    document.getElementById('address-popup-cancel').addEventListener('click', function() {
+        hideAddressPopup();
+    });
+    
+    document.getElementById('address-popup-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        saveAddress();
+        saveAddressFromPopup();
     });
     
-    // Đăng xuất
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = '../login/login.html';
-            }
-        });
-    }
+    document.getElementById('address-popup-overlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideAddressPopup();
+        }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideAddressPopup();
+        }
+    });
 }
 
 // --- Hiển thị tab ---
 function showTab(tabId) {
-    // Ẩn tất cả các tab
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
     
-    // Bỏ active tất cả các menu item
     document.querySelectorAll('.menu-item').forEach(item => {
         item.classList.remove('active');
     });
     
-    // Hiển thị tab được chọn
     const targetTab = document.getElementById(tabId);
     if (targetTab) {
         targetTab.classList.add('active');
         
-        // Reset về trang 1 khi chuyển tab đơn hàng
-        if (tabId === 'orders') {
+        if (tabId === 'order-history') {
             currentPage = 1;
             renderOrders();
         }
     }
     
-    // Active menu item tương ứng
     const targetMenuItem = document.querySelector(`.menu-item[data-tab="${tabId}"]`);
     if (targetMenuItem) {
         targetMenuItem.classList.add('active');
@@ -182,30 +170,25 @@ function savePersonalInfo() {
         return;
     }
     
-    // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         alert('Email không hợp lệ.');
         return;
     }
     
-    // Validate phone
     const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
     if (!phoneRegex.test(phone)) {
         alert('Số điện thoại không hợp lệ.');
         return;
     }
     
-    // Cập nhật thông tin người dùng
     currentUser.name = name;
     currentUser.email = email;
     currentUser.phone = phone;
     
     try {
-        // Cập nhật currentUser trong localStorage
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
-        // Cập nhật trong danh sách người dùng
         let users = JSON.parse(localStorage.getItem('users')) || [];
         const userIndex = users.findIndex(u => u.id === currentUser.id);
         if (userIndex !== -1) {
@@ -216,7 +199,6 @@ function savePersonalInfo() {
         alert('Cập nhật thông tin thành công!');
         loadUserData();
         
-        // Ẩn form, hiển thị thông tin
         document.getElementById('personal-info-edit').style.display = 'none';
         document.getElementById('personal-info-view').style.display = 'block';
     } catch (e) {
@@ -225,7 +207,80 @@ function savePersonalInfo() {
     }
 }
 
-// --- Render địa chỉ ---
+// --- Popup địa chỉ ---
+function showAddressPopup() {
+    const popup = document.getElementById('address-popup-overlay');
+    const title = document.getElementById('address-popup-title');
+    
+    title.textContent = 'Thêm địa chỉ mới';
+    document.getElementById('address-popup-form').reset();
+    document.getElementById('address-popup-id').value = '';
+    
+    popup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+        document.getElementById('address-popup-recipient-name').focus();
+    }, 100);
+}
+
+function hideAddressPopup() {
+    const popup = document.getElementById('address-popup-overlay');
+    popup.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function saveAddressFromPopup() {
+    const recipientName = document.getElementById('address-popup-recipient-name').value.trim();
+    const recipientPhone = document.getElementById('address-popup-recipient-phone').value.trim();
+    const fullAddress = document.getElementById('address-popup-address-detail').value.trim();
+    const isDefaultChecked = document.getElementById('address-popup-is-default').checked;
+    
+    if (!recipientName || !recipientPhone || !fullAddress) {
+        alert('Vui lòng điền đầy đủ thông tin địa chỉ.');
+        return;
+    }
+    
+    const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+    if (!phoneRegex.test(recipientPhone)) {
+        alert('Số điện thoại không hợp lệ.');
+        return;
+    }
+    
+    try {
+        let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
+        
+        const newAddress = {
+            id: Date.now().toString(),
+            userId: currentUser.id,
+            recipientName,
+            recipientPhone,
+            fullAddress,
+            isDefault: isDefaultChecked
+        };
+        
+        if (isDefaultChecked) {
+            allAddresses = allAddresses.map(addr => {
+                if (addr.userId === currentUser.id) {
+                    return { ...addr, isDefault: false };
+                }
+                return addr;
+            });
+        }
+        
+        allAddresses.push(newAddress);
+        localStorage.setItem('addresses', JSON.stringify(allAddresses));
+        
+        alert('Thêm địa chỉ thành công!');
+        loadAddresses();
+        hideAddressPopup();
+    } catch (e) {
+        console.error("Lỗi khi lưu địa chỉ:", e);
+        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+    }
+}
+
+// --- Render và quản lý địa chỉ ---
 function renderAddresses() {
     const container = document.getElementById('addresses-list');
     if (!container) return;
@@ -237,8 +292,10 @@ function renderAddresses() {
     
     let html = '';
     addresses.forEach(address => {
+        const isEditing = editingAddressId === address.id;
+        
         html += `
-            <div class="address-card ${address.isDefault ? 'default' : ''}">
+            <div class="address-card ${address.isDefault ? 'default' : ''} ${isEditing ? 'editing' : ''}" data-id="${address.id}">
                 <div class="address-card-header">
                     <div class="address-card-title">${address.recipientName}</div>
                     ${address.isDefault ? '<span class="address-badge">Mặc định</span>' : ''}
@@ -247,79 +304,120 @@ function renderAddresses() {
                     <div><strong>Điện thoại:</strong> ${address.recipientPhone}</div>
                     <div><strong>Địa chỉ:</strong> ${address.fullAddress}</div>
                 </div>
-                <div class="address-card-actions">
-                    <button class="btn-edit edit-address-btn" data-id="${address.id}">Sửa</button>
-                    <button class="btn-delete delete-address-btn" data-id="${address.id}">Xóa</button>
-                    ${!address.isDefault ? `<button class="btn-default set-default-address-btn" data-id="${address.id}">Đặt làm mặc định</button>` : ''}
-                </div>
+                
+                ${!isEditing ? `
+                    <div class="address-card-actions">
+                        <button class="btn-edit edit-address-btn" data-id="${address.id}">Sửa</button>
+                        <button class="btn-delete delete-address-btn" data-id="${address.id}">Xóa</button>
+                        ${!address.isDefault ? `<button class="btn-default set-default-address-btn" data-id="${address.id}">Đặt làm mặc định</button>` : ''}
+                    </div>
+                ` : ''}
+                
+                ${isEditing ? `
+                    <div class="address-edit-form active">
+                        <h4>Chỉnh sửa địa chỉ</h4>
+                        <form class="inline-address-form" data-id="${address.id}">
+                            <div class="form-group">
+                                <label for="edit-recipient-name-${address.id}">Họ và tên người nhận:</label>
+                                <input type="text" id="edit-recipient-name-${address.id}" value="${address.recipientName}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-recipient-phone-${address.id}">Số điện thoại:</label>
+                                <input type="tel" id="edit-recipient-phone-${address.id}" value="${address.recipientPhone}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-address-detail-${address.id}">Địa chỉ chi tiết:</label>
+                                <input type="text" id="edit-address-detail-${address.id}" value="${address.fullAddress}" placeholder="Số nhà, tên đường..." required>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="edit-is-default-${address.id}" ${address.isDefault ? 'checked' : ''}>
+                                <label for="edit-is-default-${address.id}">Đặt làm địa chỉ mặc định</label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                <button type="button" class="btn cancel-inline-edit" data-id="${address.id}">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                ` : ''}
             </div>
         `;
     });
     
     container.innerHTML = html;
+    setupAddressEvents();
+}
 
-    // Gắn sự kiện sau khi render
+function setupAddressEvents() {
+    const container = document.getElementById('addresses-list');
+    if (!container) return;
+    
     container.querySelectorAll('.edit-address-btn').forEach(btn => {
-        btn.addEventListener('click', () => editAddress(btn.getAttribute('data-id')));
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const addressId = btn.getAttribute('data-id');
+            startEditingAddress(addressId);
+        });
     });
+    
     container.querySelectorAll('.delete-address-btn').forEach(btn => {
-        btn.addEventListener('click', () => deleteAddress(btn.getAttribute('data-id')));
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const addressId = btn.getAttribute('data-id');
+            deleteAddress(addressId);
+        });
     });
+    
     container.querySelectorAll('.set-default-address-btn').forEach(btn => {
-        btn.addEventListener('click', () => setDefaultAddress(btn.getAttribute('data-id')));
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const addressId = btn.getAttribute('data-id');
+            setDefaultAddress(addressId);
+        });
+    });
+    
+    container.querySelectorAll('.inline-address-form').forEach(form => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const addressId = form.getAttribute('data-id');
+            saveInlineAddress(addressId);
+        });
+    });
+    
+    container.querySelectorAll('.cancel-inline-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            cancelInlineEditing();
+        });
     });
 }
 
-// --- Hiển thị form địa chỉ ---
-function showAddressForm(addressId = null) {
-    const formContainer = document.getElementById('address-form-container');
-    const formTitle = document.getElementById('address-form-title');
-    
-    if (addressId) {
-        // Chỉnh sửa địa chỉ
-        formTitle.textContent = 'Chỉnh sửa địa chỉ';
-        
-        const address = addresses.find(addr => addr.id === addressId);
-        if (!address) {
-            alert('Không tìm thấy địa chỉ để chỉnh sửa.');
-            return;
-        }
-        
-        document.getElementById('address-id').value = address.id;
-        document.getElementById('recipient-name').value = address.recipientName;
-        document.getElementById('recipient-phone').value = address.recipientPhone;
-        document.getElementById('address-detail').value = address.fullAddress;
-        document.getElementById('is-default').checked = address.isDefault;
-        
-    } else {
-        // Thêm địa chỉ mới
-        formTitle.textContent = 'Thêm địa chỉ mới';
-        document.getElementById('address-form').reset();
-        document.getElementById('address-id').value = '';
-    }
-    
-    formContainer.style.display = 'block';
+function startEditingAddress(addressId) {
+    editingAddressId = addressId;
+    hideAddressPopup();
+    renderAddresses();
+    scrollToEditingAddress(addressId);
 }
 
-// --- Ẩn form địa chỉ ---
-function hideAddressForm() {
-    document.getElementById('address-form-container').style.display = 'none';
+function cancelInlineEditing() {
+    editingAddressId = null;
+    renderAddresses();
 }
 
-// --- Lưu địa chỉ ---
-function saveAddress() {
-    const addressId = document.getElementById('address-id').value;
-    const recipientName = document.getElementById('recipient-name').value.trim();
-    const recipientPhone = document.getElementById('recipient-phone').value.trim();
-    const fullAddress = document.getElementById('address-detail').value.trim();
-    const isDefaultChecked = document.getElementById('is-default').checked;
+function saveInlineAddress(addressId) {
+    const form = document.querySelector(`.inline-address-form[data-id="${addressId}"]`);
+    if (!form) return;
+    
+    const recipientName = form.querySelector(`#edit-recipient-name-${addressId}`).value.trim();
+    const recipientPhone = form.querySelector(`#edit-recipient-phone-${addressId}`).value.trim();
+    const fullAddress = form.querySelector(`#edit-address-detail-${addressId}`).value.trim();
+    const isDefaultChecked = form.querySelector(`#edit-is-default-${addressId}`).checked;
     
     if (!recipientName || !recipientPhone || !fullAddress) {
         alert('Vui lòng điền đầy đủ thông tin địa chỉ.');
         return;
     }
     
-    // Validate phone
     const phoneRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
     if (!phoneRegex.test(recipientPhone)) {
         alert('Số điện thoại không hợp lệ.');
@@ -328,36 +426,11 @@ function saveAddress() {
     
     try {
         let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
+        const index = allAddresses.findIndex(addr => addr.id === addressId && addr.userId === currentUser.id);
         
-        if (addressId) {
-            // Cập nhật địa chỉ hiện có
-            const index = allAddresses.findIndex(addr => addr.id === addressId && addr.userId === currentUser.id);
-            if (index !== -1) {
-                allAddresses[index] = {
-                    ...allAddresses[index],
-                    recipientName,
-                    recipientPhone,
-                    fullAddress,
-                    isDefault: isDefaultChecked
-                };
-                
-                if (isDefaultChecked) {
-                    allAddresses = allAddresses.map(addr => {
-                        if (addr.userId === currentUser.id && addr.id !== addressId) {
-                            return { ...addr, isDefault: false };
-                        }
-                        return addr;
-                    });
-                }
-            } else {
-                alert('Không tìm thấy địa chỉ để cập nhật.');
-                return;
-            }
-        } else {
-            // Thêm địa chỉ mới
-            const newAddress = {
-                id: Date.now().toString(),
-                userId: currentUser.id,
+        if (index !== -1) {
+            allAddresses[index] = {
+                ...allAddresses[index],
                 recipientName,
                 recipientPhone,
                 fullAddress,
@@ -366,32 +439,39 @@ function saveAddress() {
             
             if (isDefaultChecked) {
                 allAddresses = allAddresses.map(addr => {
-                    if (addr.userId === currentUser.id) {
+                    if (addr.userId === currentUser.id && addr.id !== addressId) {
                         return { ...addr, isDefault: false };
                     }
                     return addr;
                 });
             }
             
-            allAddresses.push(newAddress);
+            localStorage.setItem('addresses', JSON.stringify(allAddresses));
+            alert('Cập nhật địa chỉ thành công!');
+            
+            editingAddressId = null;
+            loadAddresses();
+        } else {
+            alert('Không tìm thấy địa chỉ để cập nhật.');
         }
-        
-        localStorage.setItem('addresses', JSON.stringify(allAddresses));
-        alert(addressId ? 'Cập nhật địa chỉ thành công!' : 'Thêm địa chỉ thành công!');
-        loadAddresses();
-        hideAddressForm();
     } catch (e) {
         console.error("Lỗi khi lưu địa chỉ:", e);
         alert('Có lỗi xảy ra, vui lòng thử lại sau.');
     }
 }
 
-// --- Chỉnh sửa địa chỉ ---
-function editAddress(addressId) {
-    showAddressForm(addressId);
+function scrollToEditingAddress(addressId) {
+    setTimeout(() => {
+        const editingCard = document.querySelector(`.address-card[data-id="${addressId}"]`);
+        if (editingCard) {
+            editingCard.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+    }, 100);
 }
 
-// --- Xóa địa chỉ ---
 function deleteAddress(addressId) {
     if (!confirm('Bạn có chắc chắn muốn xóa địa chỉ này?')) return;
     
@@ -399,6 +479,11 @@ function deleteAddress(addressId) {
         let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
         allAddresses = allAddresses.filter(addr => !(addr.id === addressId && addr.userId === currentUser.id));
         localStorage.setItem('addresses', JSON.stringify(allAddresses));
+        
+        if (editingAddressId === addressId) {
+            editingAddressId = null;
+        }
+        
         loadAddresses();
         alert('Xóa địa chỉ thành công!');
     } catch (e) {
@@ -407,7 +492,6 @@ function deleteAddress(addressId) {
     }
 }
 
-// --- Đặt địa chỉ mặc định ---
 function setDefaultAddress(addressId) {
     try {
         let allAddresses = JSON.parse(localStorage.getItem('addresses')) || [];
@@ -426,7 +510,7 @@ function setDefaultAddress(addressId) {
     }
 }
 
-// --- Render đơn hàng với phân trang ---
+// --- Quản lý đơn hàng ---
 function renderOrders() {
     const container = document.getElementById('orders-list');
     const paginationContainer = document.getElementById('orders-pagination');
@@ -441,13 +525,11 @@ function renderOrders() {
         return;
     }
     
-    // Tính toán phân trang
     const totalPages = Math.ceil(orders.length / ordersPerPage);
     const startIndex = (currentPage - 1) * ordersPerPage;
     const endIndex = Math.min(startIndex + ordersPerPage, orders.length);
     const currentOrders = orders.slice(startIndex, endIndex);
     
-    // Render danh sách đơn hàng
     let html = '';
     currentOrders.forEach(order => {
         const statusInfo = getOrderStatusInfo(order.status);
@@ -470,27 +552,30 @@ function renderOrders() {
     });
     
     container.innerHTML = html;
-
-    // Render phân trang
     renderPagination(totalPages, paginationContainer);
+    setupOrderEvents();
+}
+
+function setupOrderEvents() {
+    const container = document.getElementById('orders-list');
+    if (!container) return;
     
-    // Gắn sự kiện click sau khi render
     container.querySelectorAll('.view-order-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            showOrderDetail(btn.getAttribute('data-id'));
+            const orderId = btn.getAttribute('data-id');
+            showOrderDetail(orderId);
         });
     });
     
-    // Gắn sự kiện click cho toàn bộ card order
     container.querySelectorAll('.order-card').forEach(card => {
         card.addEventListener('click', () => {
-            showOrderDetail(card.getAttribute('data-id'));
+            const orderId = card.getAttribute('data-id');
+            showOrderDetail(orderId);
         });
     });
 }
 
-// --- Render phân trang ---
 function renderPagination(totalPages, container) {
     if (!container || totalPages <= 1) {
         container.innerHTML = '';
@@ -504,24 +589,20 @@ function renderPagination(totalPages, container) {
         <div class="pagination-controls">
     `;
     
-    // Nút Previous
     if (currentPage > 1) {
         html += `<button class="pagination-btn prev-btn" data-page="${currentPage - 1}">‹</button>`;
     } else {
         html += `<button class="pagination-btn prev-btn disabled" disabled>‹</button>`;
     }
     
-    // Các nút trang
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
     
-    // Điều chỉnh nếu không đủ maxVisiblePages
     if (endPage - startPage + 1 < maxVisiblePages) {
         startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
     
-    // Nút trang đầu
     if (startPage > 1) {
         html += `<button class="pagination-btn" data-page="1">1</button>`;
         if (startPage > 2) {
@@ -529,7 +610,6 @@ function renderPagination(totalPages, container) {
         }
     }
     
-    // Các trang
     for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
             html += `<button class="pagination-btn active" data-page="${i}">${i}</button>`;
@@ -538,7 +618,6 @@ function renderPagination(totalPages, container) {
         }
     }
     
-    // Nút trang cuối
     if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
             html += `<span class="pagination-ellipsis">...</span>`;
@@ -546,7 +625,6 @@ function renderPagination(totalPages, container) {
         html += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
     }
     
-    // Nút Next
     if (currentPage < totalPages) {
         html += `<button class="pagination-btn next-btn" data-page="${currentPage + 1}">›</button>`;
     } else {
@@ -554,10 +632,14 @@ function renderPagination(totalPages, container) {
     }
     
     html += `</div>`;
-    
     container.innerHTML = html;
+    setupPaginationEvents();
+}
+
+function setupPaginationEvents() {
+    const container = document.getElementById('orders-pagination');
+    if (!container) return;
     
-    // Gắn sự kiện cho các nút phân trang
     container.querySelectorAll('.pagination-btn:not(.disabled)').forEach(btn => {
         btn.addEventListener('click', function() {
             const page = parseInt(this.getAttribute('data-page'));
@@ -565,7 +647,6 @@ function renderPagination(totalPages, container) {
                 currentPage = page;
                 renderOrders();
                 
-                // Cuộn lên đầu danh sách đơn hàng
                 const ordersContainer = document.getElementById('orders-list');
                 if (ordersContainer) {
                     ordersContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -575,7 +656,6 @@ function renderPagination(totalPages, container) {
     });
 }
 
-// --- Hiển thị chi tiết đơn hàng ---
 function showOrderDetail(orderId) {
     try {
         const order = orders.find(o => o.id == orderId);
@@ -594,7 +674,6 @@ function showOrderDetail(orderId) {
 
         const statusInfo = getOrderStatusInfo(order.status);
         
-        // Render chi tiết đơn hàng
         let html = `
             <div class="order-detail-header">
                 <h3>Chi tiết đơn hàng #${order.id}</h3>
@@ -628,7 +707,7 @@ function showOrderDetail(orderId) {
             order.items.forEach(item => {
                 html += `
                     <div class="order-item">
-                        <img src="../${item.image}" alt="${item.productName}" class="order-item-image">
+                        <img src="../${item.image}" alt="${item.productName}" class="order-item-image" onerror="this.src='https://placehold.co/80x80?text=Ảnh+lỗi'">
                         <div class="order-item-info">
                             <div class="order-item-name">${item.productName}</div>
                             <div class="order-item-details">${item.unit || ''} - SL: ${item.quantity}</div>
@@ -682,8 +761,6 @@ function showOrderDetail(orderId) {
         
         content.innerHTML = html;
         container.style.display = 'flex';
-
-        // Gắn sự kiện đóng modal
         setupOrderDetailModalEvents(container);
         
     } catch (error) {
@@ -692,9 +769,7 @@ function showOrderDetail(orderId) {
     }
 }
 
-// --- Thiết lập sự kiện cho modal chi tiết đơn hàng ---
 function setupOrderDetailModalEvents(container) {
-    // Đóng khi click nút X
     const closeBtn = document.getElementById('close-order-detail');
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
@@ -702,14 +777,12 @@ function setupOrderDetailModalEvents(container) {
         });
     }
 
-    // Đóng khi click bên ngoài modal
     container.addEventListener('click', function(e) {
         if (e.target === container) {
             container.style.display = 'none';
         }
     });
 
-    // Đóng khi nhấn phím ESC
     const escapeHandler = function(e) {
         if (e.key === 'Escape' && container.style.display === 'flex') {
             container.style.display = 'none';
@@ -719,7 +792,6 @@ function setupOrderDetailModalEvents(container) {
     document.addEventListener('keydown', escapeHandler);
 }
 
-// --- Lấy thông tin trạng thái đơn hàng ---
 function getOrderStatusInfo(status) {
     switch (status) {
         case 'pending':
@@ -737,7 +809,6 @@ function getOrderStatusInfo(status) {
     }
 }
 
-// --- Định dạng ngày ---
 function formatDate(dateString) {
     try {
         const date = new Date(dateString);
@@ -756,7 +827,6 @@ function formatDate(dateString) {
     }
 }
 
-// --- Định dạng tiền tệ ---
 function formatCurrency(amount) {
     if (typeof amount !== 'number' || isNaN(amount)) {
         return 'Liên hệ';
@@ -766,8 +836,3 @@ function formatCurrency(amount) {
         currency: 'VND' 
     }).format(amount);
 }
-
-// --- Xử lý trước khi rời trang ---
-window.addEventListener('beforeunload', function() {
-    // Dọn dẹp các sự kiện nếu cần
-});

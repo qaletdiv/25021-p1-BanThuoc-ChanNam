@@ -93,34 +93,39 @@
                 <!-- Địa chỉ sẽ được render bằng JS -->
               </div>
               
-              <!-- Form thêm/sửa địa chỉ -->
-              <div class="address-form-container" id="address-form-container">
-                <h3 id="address-form-title">Thêm địa chỉ mới</h3>
-                <form id="address-form">
-                  <input type="hidden" id="address-id">
-                  <div class="form-group">
-                    <label for="recipient-name">Họ và tên người nhận:</label>
-                    <input type="text" id="recipient-name" required>
+              <!-- Popup thêm địa chỉ mới -->
+              <div class="address-popup-overlay" id="address-popup-overlay">
+                  <div class="address-popup">
+                      <div class="address-popup-header">
+                          <h3 class="address-popup-title" id="address-popup-title">Thêm địa chỉ mới</h3>
+                          <button class="address-popup-close" id="address-popup-close">&times;</button>
+                      </div>
+                      <form id="address-popup-form" class="address-popup-form">
+                          <input type="hidden" id="address-popup-id">
+                          <div class="form-group">
+                              <label for="address-popup-recipient-name">Họ và tên người nhận:</label>
+                              <input type="text" id="address-popup-recipient-name" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="address-popup-recipient-phone">Số điện thoại:</label>
+                              <input type="tel" id="address-popup-recipient-phone" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="address-popup-address-detail">Địa chỉ chi tiết:</label>
+                              <input type="text" id="address-popup-address-detail" placeholder="Số nhà, tên đường..." required>
+                          </div>
+                          <div class="form-group checkbox-group">
+                              <input type="checkbox" id="address-popup-is-default">
+                              <label for="address-popup-is-default">Đặt làm địa chỉ mặc định</label>
+                          </div>
+                          <div class="form-actions">
+                              <button type="submit" class="btn btn-primary">Lưu địa chỉ</button>
+                              <button type="button" id="address-popup-cancel" class="btn cancel-address">Hủy</button>
+                          </div>
+                      </form>
                   </div>
-                  <div class="form-group">
-                    <label for="recipient-phone">Số điện thoại:</label>
-                    <input type="tel" id="recipient-phone" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="address-detail">Địa chỉ chi tiết:</label>
-                    <input type="text" id="address-detail" placeholder="Số nhà, tên đường..." required>
-                  </div>
-                  <div class="form-group checkbox-group">
-                    <input type="checkbox" id="is-default">
-                    <label for="is-default">Đặt làm địa chỉ mặc định</label>
-                  </div>
-                  <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Lưu địa chỉ</button>
-                    <button type="button" id="cancel-address" class="cancel-address">Hủy</button>
-                  </div>
-                </form>
               </div>
-            </div>
+            </div>  
             
             <!-- Tab Lịch sử đặt hàng -->
             <div id="order-history" class="tab-content">

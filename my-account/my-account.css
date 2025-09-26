@@ -380,6 +380,165 @@
   transform: translateY(-1px);
 }
 
+/* ===== INLINE ADDRESS FORM STYLES ===== */
+.address-card.editing {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.address-edit-form {
+  display: none;
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+.address-edit-form.active {
+  display: block;
+}
+
+.address-edit-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.address-edit-form .form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hide the global address form when editing inline */
+.address-form-container.hidden {
+  display: none;
+}
+
+
+/* Thêm vào my-account.css */
+
+/* ===== ADDRESS POPUP STYLES ===== */
+.address-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.address-popup-overlay.active {
+    display: flex;
+}
+
+.address-popup {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: popupSlideIn 0.3s ease;
+}
+
+@keyframes popupSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.address-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.address-popup-title {
+    font-size: 1.5rem;
+    color: #1f2937;
+    font-weight: 600;
+    margin: 0;
+}
+
+.address-popup-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.address-popup-close:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.address-popup-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.address-popup-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.address-popup-form .btn {
+    flex: 1;
+}
+
+/* Responsive cho popup */
+@media (max-width: 768px) {
+    .address-popup {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .address-popup-form .form-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .address-popup {
+        padding: 1rem;
+    }
+    
+    .address-popup-title {
+        font-size: 1.3rem;
+    }
+}
+
 /* ===== ORDER HISTORY STYLES ===== */
 .orders-list {
   margin-bottom: 2rem;
