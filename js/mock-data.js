@@ -89,7 +89,7 @@ const mockProducts = [
     id: 4,
     name: "Thuốc nhỏ mắt Tobrex",
     price: 65000,
-    category: "Chăm sóc cá nhân",
+    category: "Vitamin & Khoáng chất",
     categoryId: 4, 
     image: "images/products/med004.jfif",
     manufacturer: "GlaxoSmithKline",
